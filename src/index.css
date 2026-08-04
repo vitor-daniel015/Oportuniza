@@ -6,23 +6,33 @@
 
 @theme {
   --font-sans: "Montserrat", ui-sans-serif, system-ui, sans-serif;
-  
-  --color-brand-blue-depth: #1E4F7A;
-  --color-brand-green-sprout: #4DA25A;
-  --color-brand-green-herbal: #9ACE5F;
-  
-  --color-surface-bg: #F4F7F9;
+
+  --color-brand-blue-depth: #1e4f7a;
+  --color-brand-green-sprout: #4da25a;
+  --color-brand-green-herbal: #9ace5f;
+
+  --color-surface-bg: #f4f7f9;
   --color-text-title: #184671;
-  --color-text-secondary: #5F6B75;
+  --color-text-secondary: #5f6b75;
   --color-text-body: #141414;
 }
 
 @layer base {
-  body {
-    @apply bg-surface-bg text-text-body font-sans antialiased;
+  * {
+    @apply box-border;
   }
-}
 
-.markdown-body {
-  @apply text-text-body leading-relaxed;
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply m-0 min-w-80 bg-surface-bg text-text-body font-sans antialiased;
+  }
+
+  button,
+  a,
+  select {
+    @apply cursor-pointer;
+  }
 }

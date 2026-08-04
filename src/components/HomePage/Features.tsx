@@ -21,7 +21,7 @@ export const Features: React.FC = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {/* Special Large Card for first item if needed, but following layout */}
-            <div className="bg-[#153a5c] rounded-3xl p-10 border border-white/10 flex flex-col justify-center min-h-[300px]">
+            <div className="bg-[#153a5c] rounded-3xl p-10 border border-white/10 flex flex-col justify-center min-h-75">
                 <h4 className="text-3xl font-bold text-brand-green-herbal mb-4 leading-tight">{trustCards[0].title}</h4>
                 <p className="text-gray-300 leading-relaxed">{trustCards[0].desc}</p>
             </div>
@@ -33,15 +33,6 @@ export const Features: React.FC = () => {
                         <p className="text-gray-400 text-sm leading-relaxed">{card.desc}</p>
                     </div>
                 ))}
-            </div>
-
-            {/* Illustration area in the section if needed */}
-            <div className="hidden lg:flex items-center justify-center opacity-20">
-                 <div className="w-full h-full p-12">
-                   <svg viewBox="0 0 100 100" className="w-full h-full text-white">
-                      <circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" strokeWidth="0.5" />
-                   </svg>
-                 </div>
             </div>
         </div>
       </div>
