@@ -22,7 +22,7 @@ export function Hero() {
           </p>
           <a
             href="/cadastrar"
-            className="mt-7 inline-block rounded-md bg-brand-green-herbal px-8 py-3.5 text-sm font-bold text-white shadow-sm transition hover:bg-brand-green-sprout"
+            className="mx-auto mt-7 block w-fit rounded-md bg-brand-green-herbal px-8 py-3.5 text-sm font-bold text-white shadow-sm transition hover:bg-brand-green-sprout lg:mx-0"
           >
             Saiba Mais
           </a>

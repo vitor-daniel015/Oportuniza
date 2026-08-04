@@ -1,95 +1,128 @@
-import React from 'react';
-import { Shield, Map as MapIcon, MessageSquare, Search, Zap, CheckCircle } from 'lucide-react';
-import { motion } from 'motion/react';
+import { CheckCircle, Search, Zap } from "lucide-react";
 
-export const Features: React.FC = () => {
-  const trustCards = [
-    { title: 'Painel de Avaliações', desc: 'Com perfis, estrelas e comentários verificados.' },
-    { title: 'Mapa de Geolocalização', desc: 'Com pinos da Oportuniza mostrando profissionais próximos.' },
-    { title: 'Contatar via WhatsApp', desc: 'Uma conversa limpa e segura entre Cliente e Profissional.' }
-  ];
+const trustCards = [
+  {
+    title: "Painel de Avaliações",
+    description: "com perfis, estrelas e comentários verificados.",
+  },
+  {
+    title: "Mapa de Geolocalização",
+    description: "com pinos da Oportuniza mostrando profissionais próximos.",
+  },
+  {
+    title: "Contatar via WhatsApp",
+    description: "Uma conversa limpa e segura entre Cliente e Profissional.",
+  },
+];
 
+export function Features() {
   return (
-    <section className="relative py-32 overflow-hidden">
-      {/* Background with skew effect as seen in design */}
-      <div className="absolute inset-0 bg-brand-blue-depth -skew-y-3 origin-center scale-110"></div>
-      
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="text-center md:text-left mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">Segurança e Confiança <br/>Integradas</h2>
-        </div>
+    <section
+      id="servicos"
+      className="relative overflow-hidden bg-brand-blue-depth px-7 py-16 [clip-path:polygon(0_0,100%_8%,100%_92%,0_100%)] sm:px-10 sm:py-24 lg:py-32"
+    >
+      <div className="mx-auto max-w-5xl">
+        <h2 className="mb-5 text-left text-[23px] font-extrabold leading-[0.95] text-brand-green-herbal sm:mb-8 sm:text-4xl lg:text-5xl">
+          Segurança e Confiança
+          <br />
+          Integradas
+        </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {/* Special Large Card for first item if needed, but following layout */}
-            <div className="bg-[#153a5c] rounded-3xl p-10 border border-white/10 flex flex-col justify-center min-h-75">
-                <h4 className="text-3xl font-bold text-brand-green-herbal mb-4 leading-tight">{trustCards[0].title}</h4>
-                <p className="text-gray-300 leading-relaxed">{trustCards[0].desc}</p>
-            </div>
+        <div className="grid grid-cols-2 gap-2.5 sm:gap-5">
+          <article className="flex min-h-45 flex-col items-center justify-center rounded-[5px] bg-[#173B54] px-3 py-5 text-center sm:min-h-90 sm:rounded-xl sm:p-8">
+            <h3 className="text-[15px] font-extrabold leading-tight text-brand-green-herbal sm:text-3xl">
+              Painel de
+              <br />
+              Avaliações
+            </h3>
+            <p className="mt-3 text-[5px] leading-tight text-brand-green-sprout sm:mt-5 sm:text-xs">
+              {trustCards[0].description}
+            </p>
+          </article>
 
-            <div className="flex flex-col gap-8">
-                {trustCards.slice(1).map((card) => (
-                    <div key={card.title} className="bg-[#153a5c] rounded-3xl p-8 border border-white/10 hover:bg-white/5 transition-all">
-                        <h4 className="text-2xl font-bold text-brand-green-herbal mb-3 leading-tight">{card.title}</h4>
-                        <p className="text-gray-400 text-sm leading-relaxed">{card.desc}</p>
-                    </div>
-                ))}
-            </div>
+          <div className="grid gap-2.5 sm:gap-5">
+            {trustCards.slice(1).map((card) => (
+              <article
+                key={card.title}
+                className="flex min-h-21 flex-col items-center justify-center rounded-[5px] bg-[#173B54] px-2 py-3 text-center sm:min-h-42 sm:rounded-xl sm:p-6"
+              >
+                <h3 className="text-[13px] font-extrabold leading-tight text-brand-green-herbal sm:text-2xl">
+                  {card.title}
+                </h3>
+                <p className="mt-2 max-w-30 text-[5px] leading-tight text-brand-green-sprout sm:mt-4 sm:max-w-xs sm:text-xs">
+                  {card.description}
+                </p>
+              </article>
+            ))}
+          </div>
         </div>
       </div>
     </section>
   );
-};
+}
 
-export const HowItWorks: React.FC = () => {
-  const steps = [
-    { 
-      id: 1, 
-      title: 'Encontre Profissionais', 
-      desc: 'Pesquise por serviço e localize profissionais próximos a você.',
-      icon: Search 
-    },
-    { 
-      id: 2, 
-      title: 'Matching Inteligente', 
-      desc: 'Nosso algoritmo recomenda os melhores perfis com base na localização e reputação.',
-      icon: Zap 
-    },
-    { 
-      id: 3, 
-      title: 'Avaliação Bilateral', 
-      desc: 'Após a conclusão, ambos avaliam, garantindo transparência e segurança.',
-      icon: CheckCircle 
-    }
-  ];
+const steps = [
+  {
+    id: 1,
+    title: "Encontre Profissionais",
+    description: "Pesquise por serviço e localize profissionais próximos a você.",
+    icon: Search,
+  },
+  {
+    id: 2,
+    title: "Matching Inteligente",
+    description:
+      "Nosso algoritmo recomenda os melhores perfis com base na localização e reputação.",
+    icon: Zap,
+  },
+  {
+    id: 3,
+    title: "Avaliação Bilateral",
+    description:
+      "Após a conclusão, ambos avaliam, garantindo transparência e segurança.",
+    icon: CheckCircle,
+  },
+];
 
+export function HowItWorks() {
   return (
-    <section className="py-20 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-text-title mb-4">Como Funciona</h2>
-          <p className="text-brand-blue-depth font-semibold text-lg">Conexão Simplificada em 3 Passos</p>
-        </div>
+    <section className="py-20">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <header className="mb-16 text-center">
+          <h2 className="mb-4 text-3xl font-bold text-text-title md:text-4xl">
+            Como Funciona
+          </h2>
+          <p className="text-lg font-semibold text-brand-blue-depth">
+            Conexão Simplificada em 3 Passos
+          </p>
+        </header>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 relative">
-          {/* Connecting line (desktop) */}
-          <div className="hidden md:block absolute top-1/2 left-0 w-full h-0.5 bg-gray-100 -translate-y-1/2 z-0"></div>
-          
-          {steps.map((step) => (
-            <div key={step.id} className="relative z-10 flex flex-col items-center text-center">
-              <div className="w-16 h-16 bg-white border-4 border-brand-green-herbal rounded-full flex items-center justify-center text-brand-green-herbal shadow-xl mb-6">
-                <step.icon size={32} />
-              </div>
-              <h3 className="text-xl font-bold text-text-title mb-3">
-                <span className="text-brand-green-sprout mr-2">{step.id} -</span>
-                {step.title}
-              </h3>
-              <p className="text-text-secondary text-sm leading-relaxed max-w-xs">
-                {step.desc}
-              </p>
-            </div>
-          ))}
+        <div className="relative grid grid-cols-1 gap-12 md:grid-cols-3">
+          {steps.map((step) => {
+            const Icon = step.icon;
+
+            return (
+              <article
+                key={step.id}
+                className="relative z-10 flex flex-col items-center text-center"
+              >
+                <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full border-4 border-brand-green-herbal bg-white text-brand-green-herbal shadow-xl">
+                  <Icon size={32} />
+                </div>
+                <h3 className="mb-3 text-xl font-bold text-text-title">
+                  <span className="mr-2 text-brand-green-sprout">
+                    {step.id} -
+                  </span>
+                  {step.title}
+                </h3>
+                <p className="max-w-xs text-sm leading-relaxed text-text-secondary">
+                  {step.description}
+                </p>
+              </article>
+            );
+          })}
         </div>
       </div>
     </section>
   );
-};
+}
