@@ -5,7 +5,7 @@ import { Footer } from "../components/Footer";
 import { Hero } from "../components/HomePage/Hero";
 import { Navbar } from "../components/Navbar";
 
-export function Home() {
+export function HomePage() {
   const navigate = useNavigate();
   return (
     <div className="min-h-screen bg-surface-bg">
@@ -19,4 +19,4 @@ export function Home() {
     </div>
   );
 }
-export default Home;
+export default HomePage;

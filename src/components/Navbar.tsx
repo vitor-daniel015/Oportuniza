@@ -6,7 +6,7 @@ const links = [
   { label: "Início", href: "/" },
   { label: "Sobre Nós", href: "/#sobre" },
   { label: "Serviços", href: "/#servicos" },
-  { label: "Contato", href: "/#contato" },
+  { label: "Contato", href: "/contato" },
 ];
 
 type NavbarProps = {

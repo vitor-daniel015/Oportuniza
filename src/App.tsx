@@ -1,12 +1,14 @@
 import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { Home } from "./pages/HomePage";
+import { HomePage } from "./pages/HomePage";
+import { ContactPage } from "./pages/ContactPage";
 
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<HomePage />} />
+        <Route path="/contato" element={<ContactPage />} />
         {/* Simple catch-all to redirect to home */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

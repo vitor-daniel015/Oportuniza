@@ -34,7 +34,7 @@ export function Footer() {
         />
 
         <div className="mt-10 flex flex-col items-center gap-y-10 text-center lg:mt-4 lg:grid lg:grid-cols-[45px_1.4fr_.8fr_1fr] lg:items-center lg:gap-10 lg:text-left">
-          
+
           <div className="order-4 flex w-full items-center justify-center gap-6 border-b border-white/75 pb-9 lg:order-1 lg:col-span-1 lg:w-auto lg:flex-col lg:items-start lg:justify-start lg:gap-5 lg:border-0 lg:p-0">
             {socialLinks.map(({ label, icon: Icon, href }) => (
               <a
