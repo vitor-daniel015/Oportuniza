@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import { Features, HowItWorks } from "../components/HomePage/Features";
+import { Features } from "../components/HomePage/Features";
+import { HowItWorks } from "../components/HomePage/HowItWorks";
 import { Footer } from "../components/Footer";
 import { Hero } from "../components/HomePage/Hero";
 import { Navbar } from "../components/Navbar";

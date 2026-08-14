@@ -1,5 +1,6 @@
 import { Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
+import { ButtonOportuniza } from "../components/Button";
 
 const links = [
   { label: "Início", href: "/" },
@@ -61,13 +62,13 @@ export function Navbar({ onAuthClick }: NavbarProps) {
             ))}
           </div>
 
-          <button
-            type="button"
-            onClick={onAuthClick}
-            className="ml-auto rounded-[5px] bg-brand-blue-depth px-8 py-3 text-sm font-bold text-white transition-colors hover:bg-[#163e61]"
-          >
-            Acessar
-          </button>
+          <ButtonOportuniza
+            title="Acessar"
+            link="/login"
+            color="#1e4f7a"
+            colorHover="#163e61">
+          </ButtonOportuniza>
+
         </nav>
       </header>
 

@@ -1,4 +1,5 @@
 import { BadgeCheck, ChartNoAxesCombined } from "lucide-react";
+import { ButtonOportuniza } from "../Button";
 
 export function Hero() {
   return (
@@ -15,17 +16,17 @@ export function Hero() {
             <br />
             Oportunidades Reais
           </h1>
-          <p className="mt-5 max-w-162.5 text-sm leading-[1.35] text-text-secondary">
+          <p className="mt-5 mb-7 max-w-162.5 text-sm leading-[1.35] text-text-secondary">
             Conectando profissionais autônomos operacionais e domésticos a
             clientes de forma rápida, segura e confiável. Reduza a informalidade
             e alcance novos patamares profissionais.
           </p>
-          <a
-            href="/cadastrar"
-            className="mx-auto mt-7 block w-fit rounded-md bg-brand-green-herbal px-8 py-3.5 text-sm font-bold text-white shadow-sm transition hover:bg-brand-green-sprout lg:mx-0"
-          >
-            Saiba Mais
-          </a>
+          <ButtonOportuniza
+            title="Saiba Mais"
+            link="#ComoFunciona"
+            color="#9ace5f"
+            colorHover="#4da25a">
+          </ButtonOportuniza>
         </div>
         <div className="mx-auto h-77.5 w-77.5 overflow-hidden sm:h-92.5 sm:w-92.5">
           <img
