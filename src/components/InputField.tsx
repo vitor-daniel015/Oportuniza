@@ -1,6 +1,6 @@
 // InputField.tsx
 interface InputFieldProps {
-  label: string;
+  label?: string;
   id: string;
   type: string;
   placeholder: string;

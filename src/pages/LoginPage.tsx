@@ -1,7 +1,7 @@
-import { h1 } from "motion/react-client";
+import {Login} from "../components/LoginPage/Login"
 
 export function LoginPage() {
     return(
-        <h1>Olá vitor </h1>
+        Login()
     )
 }
