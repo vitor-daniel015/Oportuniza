@@ -18,11 +18,11 @@ export function ContactForm() {
         <InputField id="name" type="text" label="Nome" />
       </div>
 
-      <TextAreaField id="message" rows={6} />
+      <TextAreaField id="message" rows={6} placeholder="Insira aqui sua mensagem."/>
 
       <button
         type="submit"
-        className="mt-2 w-full rounded-full bg-brand-blue-depth py-3 font-bold text-white shadow-md transition-colors hover:bg-[#163e61]"
+        className="mt-2 w-full rounded-full bg-blue-depth py-3 font-bold text-white shadow-md transition-colors hover:bg-[#163e61]"
       >
         Enviar
       </button>

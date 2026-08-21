@@ -32,7 +32,7 @@ export function HowItWorks() {
           <h2 className="mb-4 text-3xl font-bold text-text-title md:text-4xl" id="ComoFunciona">
             Como Funciona
           </h2>
-          <p className="text-lg font-semibold text-brand-blue-depth">
+          <p className="text-lg font-semibold text-text-title">
             Conexão Simplificada em 3 Passos
           </p>
         </header>
@@ -46,11 +46,11 @@ export function HowItWorks() {
                 key={step.id}
                 className="relative z-10 flex flex-col items-center text-center"
               >
-                <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full border-4 border-brand-green-herbal bg-white text-brand-green-herbal shadow-xl">
+                <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full border-4 border-green-herbal bg-white text-green-herbal shadow-xl">
                   <Icon size={32} />
                 </div>
                 <h3 className="mb-3 text-xl font-bold text-text-title">
-                  <span className="mr-2 text-brand-green-sprout">
+                  <span className="mr-2 text-green-sprout">
                     {step.id} -
                   </span>
                   {step.title}

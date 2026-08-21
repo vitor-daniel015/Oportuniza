@@ -7,11 +7,11 @@
 @theme {
   --font-sans: "Montserrat", ui-sans-serif, system-ui, sans-serif;
 
-  --color-brand-blue-depth: #1e4f7a;
-  --color-brand-green-sprout: #4da25a;
-  --color-brand-green-herbal: #9ace5f;
+  --color-blue-depth: #1e4f7a;
+  --color-green-sprout: #4da25a;
+  --color-green-herbal: #9ace5f;
 
-  --color-surface-bg: #f4f7f9;
+  --color-background: #f4f7f9;
   --color-text-title: #184671;
   --color-text-secondary: #5f6b75;
   --color-text-body: #141414;
@@ -27,7 +27,7 @@
   }
 
   body {
-    @apply m-0 min-w-80 bg-surface-bg text-text-body font-sans antialiased;
+    @apply m-0 min-w-80 bg-background text-text-body font-sans antialiased;
   }
 
   button,

@@ -8,7 +8,7 @@ import { Navbar } from "../components/Navbar";
 export function HomePage() {
   const navigate = useNavigate();
   return (
-    <div className="min-h-screen bg-surface-bg">
+    <div className="min-h-screen bg-background">
       <Navbar onAuthClick={() => navigate("/auth")} />
       <main>
         <Hero />

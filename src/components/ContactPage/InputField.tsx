@@ -16,7 +16,7 @@ export function InputField({ label, id, type = "text", placeholder }: InputField
         type={type}
         id={id}
         placeholder={placeholder}
-        className="rounded-full bg-[#dadada] px-5 py-3 outline-none transition-all focus:ring-2 focus:ring-brand-blue-depth"
+        className="rounded-full bg-[#dadada] px-5 py-3 outline-none transition-all focus:ring-2 focus:ring-blue-depth"
       />
     </div>
   );

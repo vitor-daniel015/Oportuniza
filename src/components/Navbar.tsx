@@ -30,7 +30,7 @@ export function Navbar({ onAuthClick }: NavbarProps) {
 
   return (
     <>
-      <header className="relative z-40 h-38 bg-linear-to-r from-brand-blue-depth via-[#27737C] to-brand-green-sprout px-8 md:h-40 md:rounded-bl-[110px] md:px-10 md:pt-7 lg:px-[7%]">
+      <header className="relative z-40 h-38 bg-linear-to-r from-blue-depth via-[#27737C] to-green-sprout px-8 md:h-40 md:rounded-bl-[110px] md:px-10 md:pt-7 lg:px-[7%]">
         <div className="flex h-full items-center justify-between md:block md:h-auto">
           <img
             src="/assets/oportuniza-completo-branco.png"
@@ -55,7 +55,7 @@ export function Navbar({ onAuthClick }: NavbarProps) {
               <a
                 key={link.href}
                 href={link.href}
-                className="px-4 py-2 text-sm font-bold text-text-secondary transition-colors hover:text-brand-blue-depth"
+                className="px-4 py-2 text-sm font-bold text-text-secondary transition-colors hover:text-text-title"
               >
                 {link.label}
               </a>
@@ -82,7 +82,7 @@ export function Navbar({ onAuthClick }: NavbarProps) {
         aria-hidden={!isMenuOpen}
       >
         <aside
-          className={`ml-auto flex h-full w-[82%] max-w-90 flex-col bg-linear-to-b from-brand-blue-depth via-[#27737C] to-brand-green-sprout px-7 py-8 shadow-2xl transition-transform duration-300 ease-out ${
+          className={`ml-auto flex h-full w-[82%] max-w-90 flex-col bg-linear-to-b from-blue-depth via-[#27737C] to-green-sprout px-7 py-8 shadow-2xl transition-transform duration-300 ease-out ${
             isMenuOpen ? "translate-x-0" : "translate-x-full"
           }`}
           onClick={(event) => event.stopPropagation()}
@@ -122,7 +122,7 @@ export function Navbar({ onAuthClick }: NavbarProps) {
               closeMenu();
               onAuthClick?.();
             }}
-            className="mt-auto rounded-xl bg-white px-6 py-4 font-bold text-brand-blue-depth shadow-lg"
+            className="mt-auto rounded-xl bg-white px-6 py-4 font-bold text-text-title shadow-lg"
           >
             Acessar
           </button>

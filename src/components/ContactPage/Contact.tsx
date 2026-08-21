@@ -22,7 +22,7 @@ export function Contact() {
         <main className="flex min-h-screen flex-col bg-[#f5f6f8]">
 
             <section className="mx-auto w-full max-w-3xl px-6 pb-20 pt-16 text-center lg:pt-24">
-                <h1 className="text-3xl font-extrabold text-brand-blue-depth md:text-5xl">
+                <h1 className="text-3xl font-extrabold text-text-title md:text-5xl">
                     Contate-nos
                 </h1>
                 <p className="mt-4 text-sm text-gray-700 md:text-base">

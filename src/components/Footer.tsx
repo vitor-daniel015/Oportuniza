@@ -25,7 +25,7 @@ const quickInfos = [
 
 export function Footer() {
   return (
-    <footer className="relative mt-8 bg-brand-blue-depth pt-24 text-white [clip-path:polygon(0_5%,100%_12%,100%_100%,0_100%)] lg:pt-28 lg:[clip-path:polygon(0_8%,100%_18%,100%_100%,0_100%)]">
+    <footer className="relative mt-8 bg-blue-depth pt-24 text-white [clip-path:polygon(0_5%,100%_12%,100%_100%,0_100%)] lg:pt-28 lg:[clip-path:polygon(0_8%,100%_18%,100%_100%,0_100%)]">
       <div className="mx-auto max-w-7xl px-8 pb-7 pt-12 sm:px-12 lg:px-10 lg:pt-16">
         <img
           src="/assets/oportuniza-completo-branco.png"
@@ -41,7 +41,7 @@ export function Footer() {
                 key={label}
                 href={href}
                 aria-label={label}
-                className="text-white/85 transition-colors hover:text-brand-green-herbal"
+                className="text-white/85 transition-colors hover:text-green-herbal"
               >
                 <Icon size={24} strokeWidth={1.4} />
               </a>
@@ -60,7 +60,7 @@ export function Footer() {
             </h2>
             <nav className="mt-4 flex w-fit flex-col items-start space-y-3 text-sm text-white/90 lg:mt-6 lg:text-white/80">
               {quickLinks.map((link) => (
-                <a key={link.label} className="block text-left transition-colors hover:text-brand-green-herbal" href={link.href}>
+                <a key={link.label} className="block text-left transition-colors hover:text-green-herbal" href={link.href}>
                   {link.label}
                 </a>
               ))}

@@ -40,7 +40,7 @@ export function Hero() {
         <div className="min-h-65 rounded-[7px] bg-white p-7 shadow-[0_12px_30px_rgba(24,70,113,.16)]">
           <div className="flex items-start gap-4">
             <BadgeCheck
-              className="mt-1 shrink-0 text-brand-green-sprout"
+              className="mt-1 shrink-0 text-green-sprout"
               size={48}
             />
             <h2 className="text-2xl font-extrabold leading-tight text-text-title">
@@ -57,7 +57,7 @@ export function Hero() {
         <div className="min-h-65 rounded-[7px] bg-white p-7 shadow-[0_12px_30px_rgba(24,70,113,.16)]">
           <div className="flex items-start gap-4">
             <ChartNoAxesCombined
-              className="mt-1 shrink-0 text-brand-green-sprout"
+              className="mt-1 shrink-0 text-green-sprout"
               size={48}
             />
             <h2 className="text-2xl font-extrabold leading-tight text-text-title">
