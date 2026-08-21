@@ -42,7 +42,7 @@ export function Navbar({ onAuthClick }: NavbarProps) {
             type="button"
             onClick={() => setIsMenuOpen(true)}
             className="rounded-md p-2 text-white md:hidden"
-            aria-label="Abrir menu"
+            aria-label="Abrir Menu"
             aria-expanded={isMenuOpen}
           >
             <Menu size={38} strokeWidth={1.5} />
@@ -64,7 +64,7 @@ export function Navbar({ onAuthClick }: NavbarProps) {
 
           <ButtonOportuniza
             title="Acessar"
-            link="/login"
+            link="/entrar"
             color="#1e4f7a"
             colorHover="#163e61">
           </ButtonOportuniza>

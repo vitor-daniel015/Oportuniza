@@ -1,12 +1,12 @@
 // InputField.tsx
 interface InputFieldProps {
-  label: string;
+  label?: string;
   id: string;
-  type?: string;
-  placeholder?: string;
+  type: string;
+  placeholder: string;
 }
 
-export function InputField({ label, id, type = "text", placeholder }: InputFieldProps) {
+export function InputField({ label, id, type, placeholder }: InputFieldProps) {
   return (
     <div className="flex flex-col text-left">
       <label htmlFor={id} className="mb-1 ml-4 text-xs font-medium text-gray-600">
