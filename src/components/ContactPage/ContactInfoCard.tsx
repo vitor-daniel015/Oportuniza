@@ -4,7 +4,7 @@ import { LucideIcon } from "lucide-react";
 interface ContactInfoCardProps {
   icon: LucideIcon;
   title: string;
-  description?: string; // A interrogação indica que é opcional (o "Sobre Nós" não tem descrição)
+  description?: string;
 }
 
 export function ContactInfoCard({ icon: Icon, title, description }: ContactInfoCardProps) {
