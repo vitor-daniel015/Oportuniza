@@ -63,7 +63,7 @@ export function Navbar({ onAuthClick }: NavbarProps) {
           </div>
 
           <ButtonOportuniza
-            title="Acessar"
+            title="Troquei aqui"
             link="/login"
             color="#1e4f7a"
             colorHover="#163e61">
