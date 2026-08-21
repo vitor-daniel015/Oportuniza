@@ -42,7 +42,7 @@ export function Navbar({ onAuthClick }: NavbarProps) {
             type="button"
             onClick={() => setIsMenuOpen(true)}
             className="rounded-md p-2 text-white md:hidden"
-            aria-label="Abrir menu"
+            aria-label="kkkkkkk"
             aria-expanded={isMenuOpen}
           >
             <Menu size={38} strokeWidth={1.5} />
