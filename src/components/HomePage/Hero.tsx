@@ -3,10 +3,7 @@ import { ButtonOportuniza } from "../Button";
 
 export function Hero() {
   return (
-    <section
-      id="inicio"
-      className="mx-auto max-w-280 px-6 pb-16 pt-24 sm:px-10 lg:pb-24 lg:pt-28"
-    >
+    <section id="inicio" className="mx-auto max-w-280 px-6 pb-16 pt-24 sm:px-10 lg:pb-24 lg:pt-28">
       <div className="grid items-center gap-8 lg:grid-cols-[1.3fr_.7fr]">
         <div>
           <h1 className="max-w-172.5 text-[42px] font-extrabold leading-[.98] tracking-[-.045em] text-text-title sm:text-[56px] lg:text-[62px]">
