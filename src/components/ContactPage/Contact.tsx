@@ -13,7 +13,7 @@ type ContactInfo = {
 };
 
 const contactInfos: ContactInfo[] = [
-    { id: "sobre", title: "Sobre Nós", description: "Oportuniza", icon: User },
+    { id: "sobre", title: "Sobre Nós", description: "Oportuniza®", icon: User },
     { id: "telefone", title: "Telefone", description: "(15) 99999-9999", icon: Phone },
     { id: "localizacao", title: "Localização", description: "Rua das Flores, 123 - Capela do Alto", icon: MapPin },
 ];
@@ -52,7 +52,7 @@ export function Contact() {
                 </form>
             </section>
 
-            <section className="mt-16 bg-gradient-to-r from-[#64849a] to-[#71a382] pb-32 lg:pb-64 sm:mt-20 -mb-48 lg:-mb-56">
+            <section className="mt-16 bg-linear-to-r from-[#64849a] to-[#71a382] pb-32 lg:pb-64 sm:mt-20 -mb-48 lg:-mb-56">
                 <div className="mx-auto grid max-w-5xl grid-cols-3 gap-2 px-2 text-center text-white sm:-mt-16 sm:gap-4 md:px-6">
                     {contactInfos.map((info) => (
                         <ContactInfoCard

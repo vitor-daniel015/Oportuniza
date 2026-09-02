@@ -1,21 +1,6 @@
 import { ChevronRight, ChevronLeft } from "lucide-react";
-import { mockProfessionals } from "../../lib/data";
 import React from "react";
-
-const categorias = [
-    { label: "Pedreiro" },
-    { label: "Faxineira" },
-    { label: "Encanador" },
-    { label: "Baba" },
-    { label: "Encanador" },
-    { label: "Eletricista" },
-    { label: "Pintor" },
-    { label: "Marceneiro" },
-    { label: "Jardineiro" },
-    { label: "Serralheiro" },
-    { label: "Vidraceiro" },
-    { label: "Chaveiro" }
-];
+import { categorias } from "../../lib/data";
 
 interface MenuPrestadorProps {
     selectedCategory: string | null;
@@ -46,12 +31,12 @@ export function MenuPrestador({ selectedCategory, setSelectedCategory }: MenuPre
 
     return (
         <div className="pt-18 align-items-center flex justify-center w-full h-60 p-5">
-            <nav className="flex w-full items-center justify-between rounded-xl bg-linear-to-r from-blue-depth via-[#27737C] to-green-sprout px-10 shadow-sm">
+            <nav className="flex w-full items-center justify-between rounded-xl bg-linear-to-r from-blue-depth via-[#27737C] to-green-sprout px-10">
 
                 {/* Botão de Seta na esquerda */}
                 <button
                     aria-label="Ver mais"
-                    className="flex h-7 w-7 items-center justify-center rounded-full border-[1.5px] border-white text-white transition-transform hover:scale-110 cursor-pointer"
+                    className={`flex h-8 w-8 items-center justify-center rounded-full border-[1.5px] border-white text-white transition-all duration-200`}
                     onClick={handlePrev}
                 >
                     <ChevronLeft />
@@ -73,7 +58,7 @@ export function MenuPrestador({ selectedCategory, setSelectedCategory }: MenuPre
                 {/* Botão de Seta na direita */}
                 <button
                     aria-label="Ver mais"
-                    className="flex h-7 w-7 items-center justify-center rounded-full border-[1.5px] border-white text-white transition-transform hover:scale-110 cursor-pointer"
+                    className={`flex h-8 w-8 items-center justify-center rounded-full border-[1.5px] border-white text-white transition-all duration-200`}
                     onClick={handleNext}
                 >   
                     <ChevronRight />
