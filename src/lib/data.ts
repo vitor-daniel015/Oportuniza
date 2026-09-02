@@ -92,18 +92,3 @@ export const mockProfessionals: Professional[] = [
     ]
   }
 ];
-
-export const categorias = [
-    { label: "Pedreiro" },
-    { label: "Faxineira" },
-    { label: "Encanador" },
-    { label: "Baba" },
-    { label: "Efetiva" },
-    { label: "Eletricista" },
-    { label: "Pintor" },
-    { label: "Marceneiro" },
-    { label: "Jardineiro" },
-    { label: "Serralheiro" },
-    { label: "Vidraceiro" },
-    { label: "Chaveiro" }
-];
