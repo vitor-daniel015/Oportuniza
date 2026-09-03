@@ -9,7 +9,7 @@ export function HomePage() {
   const navigate = useNavigate();
   return (
     <div className="min-h-screen bg-background">
-      <Navbar onAuthClick={() => navigate("/auth")} />
+      <Navbar onAuthClick={() => navigate("/entrar")} />
       <main>
         <Hero />
         <Features />

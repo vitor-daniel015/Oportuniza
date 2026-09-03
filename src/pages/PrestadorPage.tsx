@@ -7,7 +7,7 @@ export function PrestadorPage() {
     const navigate = useNavigate();
     return (
         <div className="min-h-screen color-background">
-            <Navbar onAuthClick={() => navigate("/auth")} />
+            <Navbar onAuthClick={() => navigate("/entrar")} />
             <main>
             <Prestador />
             </main>
