@@ -4,18 +4,20 @@ import { HomePage } from "./pages/HomePage";
 import { ContactPage } from "./pages/ContactPage";
 import PrestadorPage from "./pages/PrestadorPage";
 import { LoginPage } from "./pages/LoginPage";
+import { AuthProvider } from "./contexts/AuthContext";
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/contato" element={<ContactPage />} />
-        <Route path="/prestador" element={<PrestadorPage />} />
-        <Route path="/entrar" element={<LoginPage />} />
-        {/* Simple catch-all to redirect to home */}
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/contato" element={<ContactPage />} />
+          <Route path="/prestador" element={<PrestadorPage />} />
+          <Route path="/entrar" element={<LoginPage />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
