@@ -8,7 +8,7 @@ export async function signUp(nome: string, email: string, password: string, role
     password,
     options: {
       data: { nome, role },
-      emailRedirectTo: `${window.location.origin}/entrar`,
+      emailRedirectTo: `${window.location.origin}/`,
     },
   });
 }

@@ -2,7 +2,7 @@ import { LogOut, Menu, UserRound, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { ButtonOportuniza } from "../components/Button";
 import { useAuth } from "../contexts/AuthContext";
-import { signOut } from "../service/SingUpService";
+import { signOut } from "../service/LoginService";
 
 const links = [
   { label: "Início", href: "/" },

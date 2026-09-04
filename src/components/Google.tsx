@@ -1,13 +1,6 @@
 import { useState } from "react";
-import { signInWithGoogle } from "../service/SingUpService";
+import { signInWithGoogle } from "../service/LoginService";
 
-/**
- * Renderiza um botão de login social que permite aos usuários se autenticarem usando suas contas Google.
- * Gerencia o estado de carregamento para fornecer feedback visual durante o processo de    login
- * e exibe notificações de brinde (`toast`) em caso de sucesso ou falha.
- *
- * @returns Retorna o JSX do botão de login com Google.
- */
 const Google = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
