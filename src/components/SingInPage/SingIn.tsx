@@ -13,7 +13,7 @@ export function SingIn() {
   const { session, loading: sessionLoading } = useAuth();
   const navigate = useNavigate();
 
-  if (!sessionLoading && session) return <Navigate to="/" replace />;
+  if (!sessionLoading && session) return <Navigate to="/meu-perfil" replace />;
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -24,7 +24,7 @@ export function SingIn() {
 
     setLoading(false);
     if (error) return setMessage(error.message);
-    navigate("/", { replace: true });
+    navigate("/meu-perfil", { replace: true });
   }
 
   return (

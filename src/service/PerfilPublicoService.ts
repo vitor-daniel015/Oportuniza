@@ -49,3 +49,11 @@ export async function getPerfilPublico(prestadorId: string) {
     reviews: reviewsResult.data,
   };
 }
+
+export async function submitProviderReview(prestadorId: string, rating: number, comment: string) {
+  return supabase.rpc("submit_provider_review", {
+    p_prestador_id: prestadorId,
+    p_nota: rating,
+    p_comentario: comment.trim() || null,
+  });
+}

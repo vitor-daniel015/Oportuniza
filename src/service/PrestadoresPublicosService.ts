@@ -11,6 +11,8 @@ export interface PrestadorPublico {
   bairro?: string;
   cidade: string;
   estado: string;
+  bio: string;
+  whatsapp: string | null;
 }
 
 export async function getPrestadoresPublicos(): Promise<PrestadorPublico[]> {

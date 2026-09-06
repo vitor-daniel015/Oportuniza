@@ -1,8 +1,8 @@
-import { LogOut, Menu, UserRound, X } from "lucide-react";
+import { Menu, UserRound, X } from "lucide-react";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { ButtonOportuniza } from "../components/Button";
 import { useAuth } from "../contexts/AuthContext";
-import { signOut } from "../service/LoginService";
 
 const links = [
   { label: "Início", href: "/" },
@@ -17,7 +17,6 @@ type NavbarProps = {
 
 export function Navbar({ onAuthClick }: NavbarProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const { user } = useAuth();
 
   useEffect(() => {
@@ -30,12 +29,6 @@ export function Navbar({ onAuthClick }: NavbarProps) {
 
   function closeMenu() {
     setIsMenuOpen(false);
-  }
-
-  async function handleSignOut() {
-    setIsProfileOpen(false);
-    closeMenu();
-    await signOut();
   }
 
   return (
@@ -74,32 +67,10 @@ export function Navbar({ onAuthClick }: NavbarProps) {
 
           {user ? (
             <div className="flex items-center gap-3">
-              <ButtonOportuniza title="Ver prestadores" link="/prestador" color="#1e4f7a" colorHover="#163e61" />
-              <div className="relative">
-                <button
-                  type="button"
-                  onClick={() => setIsProfileOpen((open) => !open)}
-                  className="flex items-center gap-2 rounded-md border border-blue-depth px-4 py-3 text-sm font-bold text-blue-depth transition hover:bg-blue-depth hover:text-white"
-                  aria-expanded={isProfileOpen}
-                  aria-haspopup="menu"
-                >
-                  <UserRound size={18} />
-                  Perfil
-                </button>
-                {isProfileOpen && (
-                  <div className="absolute right-0 top-full mt-2 w-40 rounded-xl bg-white p-2 shadow-xl" role="menu">
-                    <button
-                      type="button"
-                      onClick={handleSignOut}
-                      className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-red-600 transition hover:bg-red-50"
-                      role="menuitem"
-                    >
-                      <LogOut size={17} />
-                      Sair
-                    </button>
-                  </div>
-                )}
-              </div>
+              <ButtonOportuniza title="Ver prestadores" link="/prestadores" color="#1e4f7a" colorHover="#163e61" />
+              <Link to="/meu-perfil" aria-label="Meu perfil" title="Meu perfil" className="grid h-12 w-12 place-items-center rounded-full bg-blue-depth text-white transition hover:bg-green-sprout">
+                <UserRound size={25} />
+              </Link>
             </div>
           ) : (
             <ButtonOportuniza title="Acessar" link="/entrar" color="#1e4f7a" colorHover="#163e61" />
@@ -155,20 +126,20 @@ export function Navbar({ onAuthClick }: NavbarProps) {
           {user ? (
             <div className="mt-auto space-y-3">
               <a
-                href="/prestador"
+                href="/prestadores"
                 onClick={closeMenu}
                 className="block rounded-xl bg-white px-6 py-4 text-center font-bold text-text-title shadow-lg"
               >
                 Ver prestadores
               </a>
-              <button
-                type="button"
-                onClick={handleSignOut}
+              <Link
+                to="/meu-perfil"
+                onClick={closeMenu}
                 className="flex w-full items-center justify-center gap-2 rounded-xl border border-white px-6 py-4 font-bold text-white"
               >
-                <LogOut size={19} />
-                Sair
-              </button>
+                <UserRound size={19} />
+                Meu perfil
+              </Link>
             </div>
           ) : (
             <button

@@ -16,7 +16,7 @@ export function SingUp() {
   const { session, loading: sessionLoading } = useAuth();
   const navigate = useNavigate();
 
-  if (!sessionLoading && session) return <Navigate to="/" replace />;
+  if (!sessionLoading && session) return <Navigate to="/meu-perfil" replace />;
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -28,7 +28,7 @@ export function SingUp() {
     setLoading(false);
     if (error) return setMessage(error.message);
     if (!data.session) return setMessage("Conta criada! Confirme seu e-mail para entrar.");
-    navigate("/", { replace: true });
+    navigate("/meu-perfil", { replace: true });
   }
 
   return (

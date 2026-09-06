@@ -1,16 +1,24 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { Link, useParams } from "react-router-dom";
-import { MapPin, MessageCircle, Quote } from "lucide-react";
-import { getPerfilPublico } from "../../service/PerfilPublicoService";
+import { MapPin, MessageCircle, Quote, Star, X } from "lucide-react";
+import { getPerfilPublico, submitProviderReview } from "../../service/PerfilPublicoService";
 import { Stars } from "../PrestadorPage/Stars";
+import { useAuth } from "../../contexts/AuthContext";
 
 export function Perfil() {
   const { id } = useParams<{ id: string }>();
+  const { user } = useAuth();
   const [dados, setDados] = useState<Awaited<
     ReturnType<typeof getPerfilPublico>
   >>(null);
   const [loading, setLoading] = useState(true);
   const [erro, setErro] = useState("");
+  const [reviewOpen, setReviewOpen] = useState(false);
+  const [reviewRating, setReviewRating] = useState(0);
+  const [reviewComment, setReviewComment] = useState("");
+  const [reviewError, setReviewError] = useState("");
+  const [reviewSaving, setReviewSaving] = useState(false);
+  const [reloadKey, setReloadKey] = useState(0);
 
   useEffect(() => {
     async function carregarPerfil() {
@@ -37,7 +45,7 @@ export function Perfil() {
     }
 
     carregarPerfil();
-  }, [id]);
+  }, [id, reloadKey]);
 
   if (loading) {
     return (
@@ -65,10 +73,20 @@ export function Perfil() {
   }
 
   const especialidades = [...new Set(dados.servicos.map((servico) => servico.specialty))];
-  const descricao = dados.servicos
+  const descricaoServicos = dados.servicos
     .map((servico) => servico.description)
     .filter(Boolean)
     .join(" ");
+  const descricao = dados.perfil.bio || descricaoServicos;
+  const whatsapp = dados.perfil.whatsapp?.replace(/\D/g, "");
+  const whatsappComPais = whatsapp
+    ? whatsapp.startsWith("55")
+      ? whatsapp
+      : `55${whatsapp}`
+    : null;
+  const mensagemWhatsapp = encodeURIComponent(
+    `Olá, ${dados.perfil.nome}! Encontrei seu perfil no Oportuniza.`,
+  );
   const endereco = [dados.perfil.bairro, dados.perfil.cidade, dados.perfil.estado]
     .filter(Boolean)
     .join(", ");
@@ -80,6 +98,28 @@ export function Perfil() {
       month: "short",
       year: "numeric",
     }).format(new Date(data));
+  }
+
+  async function handleReview(event: FormEvent) {
+    event.preventDefault();
+    if (!id || reviewRating === 0) {
+      setReviewError("Escolha uma nota de 1 a 5 estrelas.");
+      return;
+    }
+
+    setReviewSaving(true);
+    setReviewError("");
+    const { error } = await submitProviderReview(id, reviewRating, reviewComment);
+    setReviewSaving(false);
+    if (error) {
+      setReviewError(error.message);
+      return;
+    }
+
+    setReviewOpen(false);
+    setReviewRating(0);
+    setReviewComment("");
+    setReloadKey((current) => current + 1);
   }
 
   return (
@@ -109,6 +149,15 @@ export function Perfil() {
                   {quantidadeAvaliacoes} {quantidadeAvaliacoes === 1 ? "avaliação" : "avaliações"}
                 </strong>
               </div>
+              {user && user.id !== dados.perfil.prestador_id ? (
+                <button type="button" onClick={() => setReviewOpen(true)} className="mt-4 rounded-full bg-blue-depth px-5 py-2 font-bold text-white transition hover:bg-green-sprout">
+                  Avaliar profissional
+                </button>
+              ) : !user ? (
+                <Link to="/entrar" className="mt-4 inline-block rounded-full border border-blue-depth px-5 py-2 font-bold text-blue-depth">
+                  Entre para avaliar
+                </Link>
+              ) : null}
             </div>
 
             <div>
@@ -128,15 +177,27 @@ export function Perfil() {
           </div>
         </section>
 
-        <button
-          type="button"
-          disabled
-          title="O contato público ainda não foi disponibilizado"
-          className="mt-9 flex w-full cursor-not-allowed items-center justify-center gap-3 rounded-lg bg-green-sprout px-6 py-4 text-xl font-extrabold text-white opacity-70 md:text-3xl"
-        >
-          <MessageCircle size={32} />
-          Enviar mensagem
-        </button>
+        {whatsappComPais ? (
+          <a
+            href={`https://wa.me/${whatsappComPais}?text=${mensagemWhatsapp}`}
+            target="_blank"
+            rel="noreferrer"
+            className="mt-9 flex w-full items-center justify-center gap-3 rounded-lg bg-green-sprout px-6 py-4 text-xl font-extrabold text-white transition hover:brightness-105 md:text-3xl"
+          >
+            <MessageCircle size={32} />
+            Enviar mensagem
+          </a>
+        ) : (
+          <button
+            type="button"
+            disabled
+            title="Este prestador ainda não informou o WhatsApp"
+            className="mt-9 flex w-full cursor-not-allowed items-center justify-center gap-3 rounded-lg bg-green-sprout px-6 py-4 text-xl font-extrabold text-white opacity-70 md:text-3xl"
+          >
+            <MessageCircle size={32} />
+            Enviar mensagem
+          </button>
+        )}
 
         <section className="mt-12">
           <h2 className="text-2xl font-extrabold text-text-title md:text-3xl">Portfólio de trabalhos</h2>
@@ -198,6 +259,31 @@ export function Perfil() {
           )}
         </section>
       </div>
+
+      {reviewOpen && (
+        <div className="fixed inset-0 z-60 grid place-items-center bg-[#10253b]/65 px-5 py-8 backdrop-blur-sm">
+          <form onSubmit={handleReview} className="relative w-full max-w-lg rounded-3xl bg-white p-7 shadow-2xl sm:p-9">
+            <button type="button" onClick={() => setReviewOpen(false)} aria-label="Fechar" className="absolute right-5 top-5 rounded-full p-2 hover:bg-gray-100"><X size={22} /></button>
+            <h2 className="pr-10 text-2xl font-extrabold text-text-title">Avaliar {dados.perfil.nome}</h2>
+            <p className="mt-2 text-sm text-text-secondary">Conte como foi sua experiência com esse profissional.</p>
+            <div className="mt-6 flex gap-2" role="radiogroup" aria-label="Nota">
+              {[1, 2, 3, 4, 5].map((value) => (
+                <button key={value} type="button" role="radio" aria-checked={reviewRating === value} aria-label={`${value} estrelas`} onClick={() => setReviewRating(value)} className="p-1">
+                  <Star size={36} className={value <= reviewRating ? "fill-amber-400 text-amber-400" : "text-gray-400"} />
+                </button>
+              ))}
+            </div>
+            <label className="mt-5 block">
+              <span className="mb-2 ml-3 block text-sm font-medium text-text-secondary">Comentário</span>
+              <textarea value={reviewComment} onChange={(event) => setReviewComment(event.target.value)} maxLength={1000} rows={5} required placeholder="Descreva o atendimento e o serviço realizado" className="w-full rounded-3xl bg-[#dadada] px-5 py-4 outline-none focus:ring-2 focus:ring-blue-depth" />
+            </label>
+            {reviewError && <p role="alert" className="mt-4 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">{reviewError}</p>}
+            <button disabled={reviewSaving || reviewRating === 0} className="mt-6 w-full rounded-lg bg-linear-to-r from-blue-depth to-green-sprout px-6 py-3 font-bold text-white disabled:opacity-60">
+              {reviewSaving ? "Enviando..." : "Publicar avaliação"}
+            </button>
+          </form>
+        </div>
+      )}
     </main>
   );
 }

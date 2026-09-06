@@ -6,6 +6,7 @@ import { SingInPage } from "./pages/SingInPage";
 import { SingUpPage } from "./pages/SingUpPage";
 import { AuthProvider } from "./contexts/AuthContext";
 import { PerfilPage } from "./pages/PerfilPage";
+import { MeuPerfilPage } from "./pages/MeuPerfilPage";
 
 export default function App() {
   return (
@@ -15,7 +16,9 @@ export default function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/contato" element={<ContactPage />} />
           <Route path="/prestador" element={<PrestadorPage />} />
+          <Route path="/prestadores" element={<PrestadorPage />} />
           <Route path="/prestador/:id" element={<PerfilPage />} />
+          <Route path="/meu-perfil" element={<MeuPerfilPage />} />
           <Route path="/entrar" element={<SingInPage />} />
           <Route path="/cadastrar" element={<SingUpPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />

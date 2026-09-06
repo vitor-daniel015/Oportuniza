@@ -8,7 +8,7 @@ export async function signUp(name: string, email: string, password: string, role
     password,
     options: {
       data: { name, role },
-      emailRedirectTo: `${window.location.origin}/`,
+      emailRedirectTo: `${window.location.origin}/meu-perfil`,
     },
   });
 }
@@ -21,7 +21,7 @@ export async function signInWithGoogle() {
   return supabase.auth.signInWithOAuth({
     provider: "google",
     options: {
-      redirectTo: `${window.location.origin}/`,
+      redirectTo: `${window.location.origin}/meu-perfil`,
     },
   });
 }
