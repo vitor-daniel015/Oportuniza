@@ -11,7 +11,7 @@ export function ContactPage() {
             <main>
             <Contact />
             </main>
-            <Footer />
+            <Footer overlap />
         </div>
     );
 }

@@ -33,12 +33,12 @@ export function Navbar({ onAuthClick }: NavbarProps) {
 
   return (
     <>
-      <header className="relative z-40 h-38 bg-linear-to-r from-blue-depth via-[#27737C] to-green-sprout px-8 md:h-40 md:rounded-bl-[110px] md:px-10 md:pt-7 lg:px-[7%]">
+      <header className="relative z-40 h-38 bg-linear-to-r from-blue-depth via-[#27737C] to-green-sprout px-5 sm:px-8 md:h-40 md:rounded-bl-[110px] md:px-10 md:pt-7 lg:px-[7%]">
         <div className="flex h-full items-center justify-between md:block md:h-auto">
           <img
             src="/assets/oportuniza-completo-branco.png"
             alt="Oportuniza"
-            className="h-auto w-58 object-contain md:h-24 md:w-auto"
+            className="h-auto w-44 object-contain sm:w-58 md:h-24 md:w-auto"
           />
 
           <button
@@ -79,19 +79,15 @@ export function Navbar({ onAuthClick }: NavbarProps) {
         </nav>
       </header>
 
-      <div
-        className={`fixed inset-0 z-50 bg-[#101522]/65 transition-opacity duration-300 md:hidden ${
-          isMenuOpen
-            ? "pointer-events-auto opacity-100"
-            : "pointer-events-none opacity-0"
-        }`}
+      {isMenuOpen && <div
+        className="fixed inset-0 z-50 bg-[#101522]/65 md:hidden"
         onClick={closeMenu}
-        aria-hidden={!isMenuOpen}
       >
         <aside
-          className={`ml-auto flex h-full w-[82%] max-w-90 flex-col bg-linear-to-b from-blue-depth via-[#27737C] to-green-sprout px-7 py-8 shadow-2xl transition-transform duration-300 ease-out ${
-            isMenuOpen ? "translate-x-0" : "translate-x-full"
-          }`}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Menu de navegação"
+          className="ml-auto flex h-full w-[82%] max-w-90 flex-col bg-linear-to-b from-blue-depth via-[#27737C] to-green-sprout px-7 py-8 shadow-2xl"
           onClick={(event) => event.stopPropagation()}
         >
           <div className="flex items-center justify-between">
@@ -111,7 +107,7 @@ export function Navbar({ onAuthClick }: NavbarProps) {
           </div>
 
           <nav className="mt-14 space-y-2">
-            {links.map((link, index) => (
+            {links.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
@@ -151,7 +147,7 @@ export function Navbar({ onAuthClick }: NavbarProps) {
             </button>
           )}
         </aside>
-      </div>
+      </div>}
     </>
   );
 }

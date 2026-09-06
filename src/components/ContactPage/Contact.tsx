@@ -1,6 +1,6 @@
 // Contato.tsx
 import React from "react";
-import { MapPin, Phone, User, LucideIcon } from "lucide-react";
+import { MapPin, Phone, PersonStanding, LucideIcon } from "lucide-react";
 import { InputField } from "../InputField";
 import { TextAreaField } from "../TextAreaField";
 import { ContactInfoCard } from "./ContactInfoCard";
@@ -13,7 +13,7 @@ type ContactInfo = {
 };
 
 const contactInfos: ContactInfo[] = [
-    { id: "sobre", title: "Sobre Nós", description: "Oportuniza®", icon: User },
+    { id: "sobre", title: "Sobre Nós", description: "Oportuniza®", icon: PersonStanding },
     { id: "telefone", title: "Telefone", description: "(15) 99999-9999", icon: Phone },
     { id: "localizacao", title: "Localização", description: "Rua das Flores, 123 - Capela do Alto", icon: MapPin },
 ];
@@ -27,7 +27,7 @@ export function Contact() {
     return (
         <main className="flex min-h-screen flex-col bg-[#f5f6f8]">
 
-            <section className="mx-auto w-full max-w-3xl px-6 pb-20 pt-16 text-center lg:pt-24">
+            <section className="mx-auto w-full max-w-3xl px-6 pb-20 pt-10 text-center sm:pt-16 lg:max-w-4xl lg:pb-32 lg:pt-36">
                 <h1 className="text-3xl font-extrabold text-text-title md:text-5xl">
                     Contate-nos
                 </h1>
@@ -52,10 +52,11 @@ export function Contact() {
                 </form>
             </section>
 
-            <section className="mt-16 bg-linear-to-r from-[#64849a] to-[#71a382] pb-32 lg:pb-64 sm:mt-20 -mb-48 lg:-mb-56">
-                <div className="mx-auto grid max-w-5xl grid-cols-3 gap-2 px-2 text-center text-white sm:-mt-16 sm:gap-4 md:px-6">
+            <section className="bg-linear-to-r from-[#64849a] to-[#71a382] pb-24 sm:pb-32 lg:pb-52">
+                <div className="mx-auto grid max-w-7xl -translate-y-8 grid-cols-3 gap-1 px-2 text-center text-white sm:-translate-y-12 sm:gap-5 md:px-6">
                     {contactInfos.map((info) => (
                         <ContactInfoCard
+                            key={info.id}
                             icon={info.icon}
                             title={info.title}
                             description={info.description}

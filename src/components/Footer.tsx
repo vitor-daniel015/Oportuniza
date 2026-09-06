@@ -23,10 +23,10 @@ const quickInfos = [
   { label: "(15) 99999-9999", icon: Phone },
 ];
 
-export function Footer() {
+export function Footer({ overlap = false }: { overlap?: boolean }) {
   return (
-    <footer className="relative mt-8 bg-blue-depth pt-24 text-white [clip-path:polygon(0_5%,100%_12%,100%_100%,0_100%)] lg:pt-28 lg:[clip-path:polygon(0_8%,100%_18%,100%_100%,0_100%)]">
-      <div className="mx-auto max-w-7xl px-8 pb-7 pt-12 sm:px-12 lg:px-10 lg:pt-16">
+    <footer className={`relative bg-blue-depth pt-24 text-white [clip-path:polygon(0_5%,100%_12%,100%_100%,0_100%)] lg:pt-28 lg:[clip-path:polygon(0_8%,100%_18%,100%_100%,0_100%)] ${overlap ? "-mt-24 sm:-mt-28 lg:-mt-40" : "mt-8"}`}>
+      <div className="mx-auto max-w-7xl px-5 pb-7 pt-12 sm:px-12 lg:px-10 lg:pt-16">
         <img
           src="/assets/oportuniza-completo-branco.png"
           alt="Oportuniza"
@@ -35,7 +35,7 @@ export function Footer() {
 
         <div className="mt-10 flex flex-col items-center gap-y-10 text-center lg:mt-4 lg:grid lg:grid-cols-[45px_1.4fr_.8fr_1fr] lg:items-center lg:gap-10 lg:text-left">
 
-          <div className="order-4 flex w-full items-center justify-center gap-6 border-b border-white/75 pb-9 lg:order-1 lg:col-span-1 lg:w-auto lg:flex-col lg:items-start lg:justify-start lg:gap-5 lg:border-0 lg:p-0">
+          <div className="order-4 flex w-full items-center justify-center gap-4 border-b border-white/75 pb-9 sm:gap-6 lg:order-1 lg:col-span-1 lg:w-auto lg:flex-col lg:items-start lg:justify-start lg:gap-5 lg:border-0 lg:p-0">
             {socialLinks.map(({ label, icon: Icon, href }) => (
               <a
                 key={label}

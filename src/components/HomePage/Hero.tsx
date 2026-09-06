@@ -6,7 +6,7 @@ export function Hero() {
     <section id="inicio" className="mx-auto max-w-280 px-6 pb-16 pt-24 sm:px-10 lg:pb-24 lg:pt-28">
       <div className="grid items-center gap-8 lg:grid-cols-[1.3fr_.7fr]">
         <div>
-          <h1 className="max-w-172.5 text-[42px] font-extrabold leading-[.98] tracking-[-.045em] text-text-title sm:text-[56px] lg:text-[62px]">
+          <h1 className="max-w-172.5 text-[34px] font-extrabold leading-[1.02] tracking-[-.04em] text-text-title min-[380px]:text-[40px] sm:text-[56px] lg:text-[62px]">
             Transforme Sua
             <br />
             Carreira com
@@ -25,7 +25,7 @@ export function Hero() {
             colorHover="#4da25a">
           </ButtonOportuniza>
         </div>
-        <div className="mx-auto h-77.5 w-77.5 overflow-hidden sm:h-92.5 sm:w-92.5">
+        <div className="mx-auto aspect-square w-64 max-w-full overflow-hidden sm:h-92.5 sm:w-92.5">
           <img
             src="/assets/oportuniza.png"
             alt="Símbolo Oportuniza"

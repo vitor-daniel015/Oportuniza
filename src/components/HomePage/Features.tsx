@@ -47,7 +47,7 @@ export function Features() {
                 <h3 className="text-[13px] font-extrabold leading-tight text-green-herbal sm:text-2xl">
                   {card.title}
                 </h3>
-                <p className="mt-2 max-w-30 text-[5px] leading-tight text-green-sprout sm:mt-4 sm:max-w-xs sm:text-xs">
+                <p className="mt-2 max-w-36 text-[10px] leading-tight text-green-sprout sm:mt-4 sm:max-w-xs sm:text-xs">
                   {card.description}
                 </p>
               </article>
