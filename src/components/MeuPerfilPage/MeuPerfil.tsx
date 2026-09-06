@@ -1,37 +1,20 @@
-import {
-  Camera,
-  Eye,
-  LogOut,
-  MessageCircle,
-  Pencil,
-  Plus,
-  Trash2,
-  UserRound,
-} from "lucide-react";
+import { Camera, Eye, LogOut, MessageCircle, Pencil, Plus, Trash2, UserRound, } from "lucide-react";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { getCategories, type Category } from "../../service/CategoriesService";
 import { signOut } from "../../service/LoginService";
-import {
-  addPortfolio,
-  getMeuConteudo,
-  getMeuPerfil,
-  removePortfolio,
-  saveMeuPerfil,
-  saveReviewReply,
-  uploadAvatar,
-  type MeuPerfil as PerfilData,
-  type MeuPortfolio,
-  type MinhaAvaliacao,
-  type SaveProfileInput,
-} from "../../service/MeuPerfilService";
+import { applyPendingGoogleRole } from "../../service/LoginService";
+import { addPortfolio, getMeuConteudo, getMeuPerfil, removePortfolio, saveMeuPerfil, saveReviewReply, uploadAvatar, type MeuPerfil as PerfilData, type MeuPortfolio, type MinhaAvaliacao, type SaveProfileInput, } from "../../service/MeuPerfilService";
 import { Stars } from "../PrestadorPage/Stars";
 import { OnboardingModal } from "./OnboardingModal";
+import { AvatarCropInput } from "./AvatarCropInput";
 import { PortfolioModal } from "./PortfolioModal";
 import { ProfileForm } from "./ProfileForm";
 import { ProfileModal } from "./ProfileModal";
 import { ReviewsSection } from "./ReviewsSection";
+import { PortfolioLightbox, type LightboxImage } from "../PortfolioLightbox";
+import { BackButton } from "../BackButton";
 
 const emptyForm: SaveProfileInput = {
   nome: "",
@@ -64,6 +47,8 @@ export function MeuPerfil() {
   const [portfolioFile, setPortfolioFile] = useState<File | null>(null);
   const [replyingTo, setReplyingTo] = useState<string | null>(null);
   const [reply, setReply] = useState("");
+  const [selectedPortfolio, setSelectedPortfolio] =
+    useState<LightboxImage | null>(null);
 
   async function loadData(id: string) {
     const [profileData, categoryData, content] = await Promise.all([
@@ -91,7 +76,8 @@ export function MeuPerfil() {
 
   useEffect(() => {
     if (!user) return;
-    loadData(user.id)
+    applyPendingGoogleRole()
+      .then(() => loadData(user.id))
       .catch(() => setError("Não foi possível carregar seu perfil."))
       .finally(() => setLoading(false));
   }, [user]);
@@ -137,6 +123,11 @@ export function MeuPerfil() {
   async function submitProfile(event: FormEvent) {
     event.preventDefault();
     if (await persist()) setEditOpen(false);
+  }
+  async function uploadOnboardingAvatar(file: File) {
+    if (!user) throw new Error("Entre novamente para enviar sua foto.");
+    setError("");
+    return uploadAvatar(user.id, file);
   }
   async function changeAvatar(file?: File) {
     if (!file || !user) return;
@@ -234,6 +225,9 @@ export function MeuPerfil() {
   return (
     <main className="pb-12">
       <section className="relative bg-linear-to-r from-blue-depth via-[#27737c] to-green-sprout text-white md:mt-14">
+        <div className="mx-auto max-w-7xl px-4 pt-7 sm:px-6 md:pt-14">
+          <BackButton label="Voltar à página anterior" />
+        </div>
         <div className="mx-auto min-h-24 max-w-7xl px-6 md:flex md:min-h-64 md:items-center md:pl-80 lg:pl-96">
           <div className="hidden md:block">
             <h1 className="text-5xl font-extrabold lg:text-6xl">{form.nome}</h1>
@@ -255,7 +249,7 @@ export function MeuPerfil() {
         </div>
       </section>
 
-      <div className="mx-auto max-w-7xl px-3 pt-18 sm:px-6 md:px-10 md:pt-16">
+      <div className="mx-auto max-w-7xl px-3 pt-28 sm:px-6 md:px-10 md:pt-16">
         <div className="mb-6 text-center md:hidden">
           <h1 className="mx-auto max-w-sm text-3xl font-extrabold leading-tight text-text-title min-[380px]:text-4xl">
             {form.nome}
@@ -265,15 +259,13 @@ export function MeuPerfil() {
           </p>
         </div>
         <div className="flex flex-wrap justify-between gap-4">
-          <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border bg-white px-5 py-2 font-bold text-blue-depth shadow-md">
+          <AvatarCropInput
+            className="inline-flex cursor-pointer items-center gap-2 rounded-full border bg-white px-5 py-2 font-bold text-blue-depth shadow-md"
+            disabled={saving}
+            onCroppedFile={(file) => changeAvatar(file)}
+          >
             <Camera size={18} /> Alterar foto
-            <input
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={(e) => changeAvatar(e.target.files?.[0])}
-            />
-          </label>
+          </AvatarCropInput>
           <div className="flex flex-wrap gap-3">
             {isProvider && perfil.cadastro_completo && (
               <Link
@@ -372,11 +364,18 @@ export function MeuPerfil() {
                     key={item.id}
                     className="group relative overflow-hidden rounded-xl bg-white shadow-sm"
                   >
-                    <img
-                      src={item.imagem_url}
-                      alt={item.titulo}
-                      className="h-52 w-full object-cover sm:h-80"
-                    />
+                    <button
+                      type="button"
+                      onClick={() => setSelectedPortfolio(item)}
+                      className="block w-full cursor-zoom-in overflow-hidden"
+                      aria-label={`Ampliar foto: ${item.titulo}`}
+                    >
+                      <img
+                        src={item.imagem_url}
+                        alt={item.titulo}
+                        className="h-52 w-full object-cover transition duration-300 group-hover:scale-105 sm:h-80"
+                      />
+                    </button>
                     <figcaption className="p-3 sm:p-4">
                       <h3 className="text-sm font-bold text-text-title sm:text-base">
                         {item.titulo}
@@ -445,12 +444,18 @@ export function MeuPerfil() {
         onFileChange={setPortfolioFile}
         onSubmit={submitPortfolio}
       />
+      <PortfolioLightbox
+        image={selectedPortfolio}
+        onClose={() => setSelectedPortfolio(null)}
+      />
       {isProvider && !perfil.onboarding_completo && (
         <OnboardingModal
           form={form}
           setForm={setForm}
+          categories={categories}
           saving={saving}
           error={error}
+          onUploadAvatar={uploadOnboardingAvatar}
           onSubmit={submitProfile}
         />
       )}

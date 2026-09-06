@@ -55,23 +55,39 @@ export function SingUp() {
               Crie sua Conta!
             </h1>
 
-            {/* Seletor de Perfil (Role) */}
-            <div className="mt-6 grid grid-cols-2 rounded-lg bg-[#dedede] p-1 shadow-sm">
+            <fieldset className="mt-6">
+              <legend className="text-center text-base font-bold text-text-title">
+                O que você deseja fazer no Oportuniza?
+              </legend>
+              <div className="mt-3 grid gap-3 sm:grid-cols-2">
               <button
                 type="button"
                 onClick={() => setRole("contratante")}
-                className={`flex items-center justify-center gap-2 rounded-md px-3 py-2 text-xs font-semibold transition ${role === "contratante" ? "bg-white text-green-sprout shadow-sm" : "text-text-secondary"}`}
+                aria-pressed={role === "contratante"}
+                className={`rounded-2xl border-2 p-4 text-left transition ${role === "contratante" ? "border-green-sprout bg-green-50 shadow-md" : "border-gray-200 bg-white hover:border-green-sprout/50"}`}
               >
-                <UserRound size={14} /> Contratante
+                <span className="flex items-center gap-2 font-bold text-text-title">
+                  <UserRound size={20} /> Quero contratar
+                </span>
               </button>
               <button
                 type="button"
                 onClick={() => setRole("prestador")}
-                className={`flex items-center justify-center gap-2 rounded-md px-3 py-2 text-xs font-semibold transition ${role === "prestador" ? "bg-white text-blue-depth shadow-sm" : "text-text-secondary"}`}
+                aria-pressed={role === "prestador"}
+                className={`rounded-2xl border-2 p-4 text-left transition ${role === "prestador" ? "border-blue-depth bg-blue-50 shadow-md" : "border-gray-200 bg-white hover:border-blue-depth/50"}`}
               >
-                <BriefcaseBusiness size={14} /> Prestador
+                <span className="flex items-center gap-2 font-bold text-text-title">
+                  <BriefcaseBusiness size={20} /> Quero trabalhar
+                </span>
               </button>
-            </div>
+              </div>
+              <p className="mt-3 rounded-xl bg-white px-4 py-3 text-sm leading-relaxed text-text-secondary shadow-sm">
+                <strong className="text-text-title">{role === "prestador" ? "Prestador:" : "Contratante:"}</strong>{" "}
+                {role === "prestador"
+                  ? "poderá criar um perfil profissional, divulgar seus trabalhos, receber avaliações e clientes."
+                  : "poderá procurar profissionais, conversar com eles e avaliar os serviços realizados."}
+              </p>
+            </fieldset>
 
             <form onSubmit={handleSubmit} className="mt-8 space-y-4">
               <InputField
@@ -121,7 +137,7 @@ export function SingUp() {
               </button>
             </form>
 
-            <Google />
+            <Google mode="signup" role={role} />
 
             <Link
               to="/entrar"

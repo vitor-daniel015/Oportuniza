@@ -91,7 +91,7 @@ export function SingIn() {
               </button>
             </form>
 
-            <Google />
+            <Google mode="signin" />
 
             <Link
               to="/cadastrar"

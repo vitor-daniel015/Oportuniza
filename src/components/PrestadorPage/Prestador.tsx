@@ -5,6 +5,7 @@ import {
   PrestadorPublico,
   getPrestadoresPublicos,
 } from "../../service/PrestadoresPublicosService";
+import { BackButton } from "../BackButton";
 
 export function Prestador() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -42,12 +43,15 @@ export function Prestador() {
   }
   return (
     <div className="min-h-screen">
+      <div className="mx-auto max-w-7xl px-4 pt-7 sm:px-6 md:pt-14">
+        <BackButton label="Voltar à página anterior" />
+      </div>
       <MenuPrestador
         selectedCategory={selectedCategory}
         setSelectedCategory={setSelectedCategory}
       />
 
-      <main className="max-w-7xl mx-auto px-4 pt-8 sm:pt-16">
+      <main className="max-w-7xl mx-auto px-4 pt-8 sm:px-6 sm:pt-12">
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-2xl font-bold text-text-title">
             {selectedCategory
@@ -57,7 +61,7 @@ export function Prestador() {
           {selectedCategory ? (
             <a
               onClick={() => setSelectedCategory(null)}
-              className="text-green-herbal hover:text-green-sprout transition-all"
+              className="text-green-herbal hover:text-green-sprout transition-all font-weight-extrabold text-sm sm:text-base cursor-pointer"
             >
               Ver Todos
             </a>
