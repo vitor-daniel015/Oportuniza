@@ -2,12 +2,12 @@ import { supabase } from "./supabaseClient";
 
 export type UserRole = "contratante" | "prestador";
 
-export async function signUp(nome: string, email: string, password: string, role: UserRole) {
+export async function signUp(name: string, email: string, password: string, role: UserRole) {
   return supabase.auth.signUp({
     email,
     password,
     options: {
-      data: { nome, role },
+      data: { name, role },
       emailRedirectTo: `${window.location.origin}/`,
     },
   });

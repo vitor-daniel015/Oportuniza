@@ -59,8 +59,8 @@ const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
                             Nenhum profissional encontrado nesta categoria.
                         </p>
                     ) : (
-                        profissionaisFiltrados.map((profissional: any) => (
-                            <a key={profissional.prestador_id} href={`/prestador/${profissional.prestador_id}`} className="block group">
+                        profissionaisFiltrados.map((profissional) => (
+                            <a key={profissional.service_id} href={`/prestador/${profissional.prestador_id}`} className="block group">
                                 <div className="bg-white p-6 rounded-xl shadow-xs border border-gray-100 flex flex-col justify-between">
                                     <div className="flex items-center gap-4">
                                         <div className="w-40 h-40 rounded-full overflow-hidden shrink-0">
@@ -75,7 +75,11 @@ const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
                                         <div className="flex flex-col text-left">
                                             <h3 className="text-3xl font-bold text-text-title">{profissional.nome}</h3>
                                             <p className="text-sm text-text-description font-semibold mb-1">{profissional.specialty}</p>
-                                            <Stars value={profissional.rating} />
+                                            {profissional.rating === null ? (
+                                                <p className="text-sm text-text-secondary">Sem avaliações</p>
+                                            ) : (
+                                                <Stars value={profissional.rating} />
+                                            )}
                                             <p className="mt-1 text-xs text-text-secondary">{profissional.bairro}, {profissional.cidade} - {profissional.estado}</p>
                                             <p className="mt-2 text-sm text-text-title font-semibold opacity-0 translate-y-1 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
                                                 Clique para ver mais detalhes →

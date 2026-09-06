@@ -15,6 +15,7 @@ export default function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/contato" element={<ContactPage />} />
           <Route path="/prestador" element={<PrestadorPage />} />
+          <Route path="/prestadores" element={<PrestadorPage />} />
           <Route path="/entrar" element={<SingInPage />} />
           <Route path="/cadastrar" element={<SingUpPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />

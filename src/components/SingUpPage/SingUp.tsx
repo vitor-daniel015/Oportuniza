@@ -1,5 +1,5 @@
 import { BriefcaseBusiness, UserRound } from "lucide-react";
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
 import { Navigate, Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { signUp, type UserRole } from "../../service/LoginService";
@@ -7,7 +7,7 @@ import { InputField } from "../InputField";
 import Google from "../Google";
 
 export function SingUp() {
-  const [nome, setNome] = useState("");
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState<UserRole>("contratante");
@@ -18,12 +18,12 @@ export function SingUp() {
 
   if (!sessionLoading && session) return <Navigate to="/" replace />;
 
-  async function handleSubmit() {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setLoading(true);
     setMessage("");
 
-    const { data, error } = await signUp(nome.trim(), email.trim(), password, role);
+    const { data, error } = await signUp(name.trim(), email.trim(), password, role);
 
     setLoading(false);
     if (error) return setMessage(error.message);
@@ -34,7 +34,7 @@ export function SingUp() {
   return (
     <main className="min-h-screen bg-[#f4f6f7]">
       <section className="flex min-h-screen w-full flex-col overflow-hidden bg-[#f4f6f7] lg:flex-row">
-        <aside className="relative flex min-h-[310px] flex-col overflow-hidden bg-[#215985] px-7 py-7 text-white lg:order-1 lg:min-h-full lg:w-[47%] lg:px-12 lg:py-10 lg:[clip-path:polygon(0_0,100%_0,82%_100%,0_100%)]">
+        <aside className="relative flex min-h-77.7 flex-col overflow-hidden bg-[#215985] px-7 py-7 text-white lg:order-1 lg:min-h-full lg:w-[47%] lg:px-12 lg:py-10 lg:[clip-path:polygon(0_0,100%_0,82%_100%,0_100%)]">
           <Link to="/" aria-label="Voltar para o início">
             <img src="/assets/oportuniza-completo-branco.png" alt="Oportuniza" className="w-36 lg:w-44" />
           </Link>
@@ -49,7 +49,7 @@ export function SingUp() {
         </aside>
 
         {/* Formulário à direita no desktop */}
-        <div className="relative z-10 -mt-7 flex flex-1 items-center justify-center rounded-t-[32px] bg-[#f4f6f7] px-6 py-10 lg:order-2 lg:mt-0 lg:rounded-none lg:px-16">
+        <div className="relative z-10 -mt-7 flex flex-1 items-center justify-center rounded-t-4xl bg-[#f4f6f7] px-6 py-10 lg:order-2 lg:mt-0 lg:rounded-none lg:px-16">
           <div className="w-full max-w-md">
             <h1 className="text-center text-3xl font-extrabold text-text-title lg:text-4xl">
               Crie sua Conta!
@@ -75,11 +75,11 @@ export function SingUp() {
 
             <form onSubmit={handleSubmit} className="mt-8 space-y-4">
               <InputField
-                id="nome"
+                id="name"
                 type="text"
                 aria-label="Nome"
-                value={nome}
-                onChange={(e) => setNome(e.target.value)}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
                 required
                 autoComplete="name"
                 placeholder="Digite seu nome"
