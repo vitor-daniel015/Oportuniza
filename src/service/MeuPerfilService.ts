@@ -1,4 +1,5 @@
 import { supabase } from "./supabaseClient";
+import { assertTextAllowed } from "./ContentModerationService";
 
 export interface MeuPerfil {
   id: string;
@@ -52,6 +53,13 @@ export interface SaveProfileInput {
 }
 
 export async function saveMeuPerfil(input: SaveProfileInput) {
+  [
+    input.nome,
+    input.bio,
+    input.cidade,
+    input.bairro,
+    input.estado,
+  ].forEach(assertTextAllowed);
   return supabase.rpc("save_my_profile", {
     p_nome: input.nome,
     p_cpf: input.cpf,
@@ -107,6 +115,8 @@ export function uploadAvatar(userId: string, file: File) {
 }
 
 export async function addPortfolio(userId: string, title: string, description: string, file: File) {
+  assertTextAllowed(title);
+  assertTextAllowed(description);
   const imageUrl = await uploadMedia(userId, "portfolio", file);
   const { error } = await supabase.from("portfolios").insert({
     prestador_id: userId,
@@ -134,6 +144,7 @@ export async function removePortfolio(id: string) {
 }
 
 export async function saveReviewReply(reviewId: string, userId: string, text: string) {
+  assertTextAllowed(text);
   const { error } = await supabase.from("review_replies").upsert({
     avaliacao_id: reviewId,
     prestador_id: userId,

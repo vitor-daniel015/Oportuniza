@@ -127,21 +127,29 @@ export function Perfil() {
 
     setReviewSaving(true);
     setReviewError("");
-    const { error } = await submitProviderReview(
-      id,
-      reviewRating,
-      reviewComment,
-    );
-    setReviewSaving(false);
-    if (error) {
-      setReviewError(error.message);
-      return;
+    try {
+      const { error } = await submitProviderReview(
+        id,
+        reviewRating,
+        reviewComment,
+      );
+      if (error) {
+        setReviewError(error.message);
+        return;
+      }
+      setReviewOpen(false);
+      setReviewRating(0);
+      setReviewComment("");
+      setReloadKey((current) => current + 1);
+    } catch (cause) {
+      setReviewError(
+        cause instanceof Error
+          ? cause.message
+          : "Não foi possível validar o comentário.",
+      );
+    } finally {
+      setReviewSaving(false);
     }
-
-    setReviewOpen(false);
-    setReviewRating(0);
-    setReviewComment("");
-    setReloadKey((current) => current + 1);
   }
 
   return (
@@ -160,7 +168,7 @@ export function Perfil() {
         <img
           src={dados.perfil.avatar_url || "/assets/oportuniza.png"}
           alt={dados.perfil.nome}
-          className="absolute left-1/2 top-full h-44 w-44 -translate-x-1/2 -translate-y-1/2 rounded-full border-4 border-white object-cover shadow-xl md:left-[7%] md:h-60 md:w-60 md:translate-x-0 lg:h-68 lg:w-68"
+          className="absolute left-1/2 top-full lg:top-1/2 h-44 w-44 -translate-x-1/2 -translate-y-1/2 rounded-full border-4 border-white object-cover shadow-xl md:left-[7%] md:h-60 md:w-60 md:translate-x-0 lg:h-68 lg:w-68"
         />
       </section>
 

@@ -1,5 +1,6 @@
 import { supabase } from "./supabaseClient";
 import type { PrestadorPublico } from "./PrestadoresPublicosService";
+import { assertTextAllowed } from "./ContentModerationService";
 
 export async function getPerfilPublico(prestadorId: string) {
   const [perfilResult, portfolioResult, reviewsResult] =
@@ -51,6 +52,7 @@ export async function getPerfilPublico(prestadorId: string) {
 }
 
 export async function submitProviderReview(prestadorId: string, rating: number, comment: string) {
+  assertTextAllowed(comment);
   return supabase.rpc("submit_provider_review", {
     p_prestador_id: prestadorId,
     p_nota: rating,

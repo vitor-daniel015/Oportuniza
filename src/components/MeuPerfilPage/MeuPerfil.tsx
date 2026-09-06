@@ -109,20 +109,29 @@ export function MeuPerfil() {
     setSaving(true);
     setError("");
     setMessage("");
-    const result = await saveMeuPerfil(nextForm);
-    if (result.error) {
-      setSaving(false);
-      setError(result.error.message);
+    try {
+      const result = await saveMeuPerfil(nextForm);
+      if (result.error) {
+        setError(result.error.message);
+        return false;
+      }
+      if (user) await loadData(user.id);
+      setMessage(
+        result.data
+          ? "Perfil atualizado e publicado."
+          : "Dados salvos. Complete os dados profissionais para publicar seu perfil.",
+      );
+      return true;
+    } catch (cause) {
+      setError(
+        cause instanceof Error
+          ? cause.message
+          : "Não foi possível validar o conteúdo.",
+      );
       return false;
+    } finally {
+      setSaving(false);
     }
-    if (user) await loadData(user.id);
-    setSaving(false);
-    setMessage(
-      result.data
-        ? "Perfil atualizado e publicado."
-        : "Dados salvos. Complete os dados profissionais para publicar seu perfil.",
-    );
-    return true;
   }
 
   async function submitProfile(event: FormEvent) {
@@ -233,7 +242,7 @@ export function MeuPerfil() {
             </p>
           </div>
         </div>
-        <div className="absolute left-1/2 top-full grid h-44 w-44 -translate-x-1/2 -translate-y-1/2 place-items-center overflow-hidden rounded-full border-4 border-white bg-white shadow-xl md:left-[7%] md:h-60 md:w-60 md:translate-x-0">
+        <div className="absolute left-1/2 top-full lg:top-1/2 grid h-44 w-44 -translate-x-1/2 -translate-y-1/2 place-items-center overflow-hidden rounded-full border-4 border-white bg-white shadow-xl md:left-[7%] md:h-60 md:w-60 md:translate-x-0">
           {form.avatarUrl ? (
             <img
               src={form.avatarUrl}

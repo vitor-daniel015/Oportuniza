@@ -28,7 +28,7 @@ export function Prestador() {
   }, []);
 
   const profissionaisFiltrados = selectedCategory
-    ? prestadores.filter((item: any) => item.specialty === selectedCategory)
+    ? prestadores.filter((item: PrestadorPublico) => item.specialty === selectedCategory)
     : prestadores;
 
   if (loading) {

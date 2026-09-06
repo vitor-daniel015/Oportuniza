@@ -33,7 +33,7 @@ export function Hero() {
           />
         </div>
       </div>
-      <div className="mt-10 grid gap-6 md:grid-cols-2">
+      <div className="mt-10 grid gap-6 md:grid-cols-2" id="sobrenos">
         <div className="min-h-65 rounded-[7px] bg-white p-7 shadow-[0_12px_30px_rgba(24,70,113,.16)]">
           <div className="flex items-start gap-4">
             <BadgeCheck
