@@ -74,7 +74,7 @@ export function Navbar({ onAuthClick }: NavbarProps) {
 
           {user ? (
             <div className="flex items-center gap-3">
-              <ButtonOportuniza title="Ver prestadores" link="/prestadores" color="#1e4f7a" colorHover="#163e61" />
+              <ButtonOportuniza title="Ver prestadores" link="/prestador" color="#1e4f7a" colorHover="#163e61" />
               <div className="relative">
                 <button
                   type="button"
@@ -155,7 +155,7 @@ export function Navbar({ onAuthClick }: NavbarProps) {
           {user ? (
             <div className="mt-auto space-y-3">
               <a
-                href="/prestadores"
+                href="/prestador"
                 onClick={closeMenu}
                 className="block rounded-xl bg-white px-6 py-4 text-center font-bold text-text-title shadow-lg"
               >
