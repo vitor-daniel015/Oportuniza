@@ -13,6 +13,7 @@ export function SingUp() {
   const [role, setRole] = useState<UserRole>("contratante");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const [acceptedLegalTerms, setAcceptedLegalTerms] = useState(false);
   const { session, loading: sessionLoading } = useAuth();
   const navigate = useNavigate();
 
@@ -28,6 +29,7 @@ export function SingUp() {
       email.trim(),
       password,
       role,
+      acceptedLegalTerms,
     );
 
     setLoading(false);
@@ -152,7 +154,14 @@ export function SingUp() {
               </button>
             </form>
 
-            <Google mode="signup" role={role} />
+            <Google mode="signup" role={role} termsAccepted={acceptedLegalTerms} />
+
+              <label className="mt-3 flex items-start gap-3 rounded-xl bg-white p-4 text-sm leading-relaxed shadow-sm">
+                <input type="checkbox" required checked={acceptedLegalTerms}
+                  onChange={(e) => setAcceptedLegalTerms(e.target.checked)}
+                  className="mt-1 h-5 w-5 shrink-0 accent-[#49a75d]" />
+                <span>Li e aceito os <Link className="font-bold text-blue-depth underline" to="/termos-de-uso" target="_blank">Termos de Uso</Link> e a <Link className="font-bold text-blue-depth underline" to="/politica-de-privacidade" target="_blank">Política de Privacidade</Link>.</span>
+              </label>
 
             <Link
               to="/entrar"

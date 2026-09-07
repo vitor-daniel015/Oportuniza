@@ -6,6 +6,7 @@ export interface MeuPerfil {
   role: "contratante" | "prestador" | "admin";
   nome: string;
   cpf: string | null;
+  cpf_cadastrado: boolean;
   email: string | null;
   whatsapp: string | null;
   cidade: string | null;
@@ -15,6 +16,7 @@ export interface MeuPerfil {
   bio: string | null;
   cadastro_completo: boolean;
   onboarding_completo: boolean;
+  whatsapp_publico: boolean;
 }
 
 export async function getMeuPerfil(userId: string) {
@@ -25,7 +27,7 @@ export async function getMeuPerfil(userId: string) {
     supabase
       .from("profiles")
       .select(
-        "id, role, nome, cpf, email, whatsapp, cidade, bairro, estado, avatar_url, bio, cadastro_completo, onboarding_completo",
+        "id, role, nome, email, whatsapp, whatsapp_publico, cpf_cadastrado, cidade, bairro, estado, avatar_url, bio, cadastro_completo, onboarding_completo",
       )
       .eq("id", userId)
       .single(),
@@ -40,7 +42,7 @@ export async function getMeuPerfil(userId: string) {
   if (servicosError) throw servicosError;
 
   return {
-    perfil: perfil as MeuPerfil,
+    perfil: { ...(perfil as Omit<MeuPerfil, "cpf">), cpf: null } as MeuPerfil,
     categoriaId: servicos?.[0]?.categoria_id?.toString() ?? "",
   };
 }
@@ -55,6 +57,7 @@ export interface SaveProfileInput {
   avatarUrl: string;
   bio: string;
   categoriaId: string;
+  whatsappPublico: boolean;
 }
 
 export async function saveMeuPerfil(input: SaveProfileInput) {
@@ -71,6 +74,7 @@ export async function saveMeuPerfil(input: SaveProfileInput) {
     p_avatar_url: input.avatarUrl,
     p_bio: input.bio,
     p_categoria_id: input.categoriaId ? Number(input.categoriaId) : null,
+    p_whatsapp_publico: input.whatsappPublico,
   });
 }
 
@@ -142,6 +146,59 @@ export function uploadAvatar(userId: string, file: File) {
   return uploadMedia(userId, "avatar", file);
 }
 
+function storagePath(url: string | null | undefined) {
+  const marker = "/profile-media/";
+  const path = url?.split(marker)[1];
+  return path ? decodeURIComponent(path.split("?")[0]) : null;
+}
+
+export async function removeProfileMedia(url: string | null | undefined) {
+  const path = storagePath(url);
+  if (!path) return;
+  const { error } = await supabase.storage.from("profile-media").remove([path]);
+  if (error) throw error;
+}
+
+export async function deleteMyAccount(userId: string) {
+  for (const folder of ["avatar", "portfolio"] as const) {
+    const { data, error } = await supabase.storage
+      .from("profile-media")
+      .list(`${userId}/${folder}`, { limit: 100 });
+    if (error) throw error;
+    const paths = (data ?? []).map((item) => `${userId}/${folder}/${item.name}`);
+    if (paths.length) {
+      const { error: removeError } = await supabase.storage
+        .from("profile-media")
+        .remove(paths);
+      if (removeError) throw removeError;
+    }
+  }
+  const { error } = await supabase.rpc("delete_my_account");
+  if (error) throw error;
+}
+
+export async function cleanupUnusedProfileMedia(
+  userId: string,
+  activeUrls: Array<string | null | undefined>,
+) {
+  const activePaths = new Set(activeUrls.map(storagePath).filter(Boolean));
+  const unused: string[] = [];
+  for (const folder of ["avatar", "portfolio"] as const) {
+    const { data, error } = await supabase.storage
+      .from("profile-media")
+      .list(`${userId}/${folder}`, { limit: 100 });
+    if (error) throw error;
+    for (const item of data ?? []) {
+      const path = `${userId}/${folder}/${item.name}`;
+      if (!activePaths.has(path)) unused.push(path);
+    }
+  }
+  if (unused.length) {
+    const { error } = await supabase.storage.from("profile-media").remove(unused);
+    if (error) throw error;
+  }
+}
+
 export async function addPortfolio(
   userId: string,
   title: string,
@@ -171,12 +228,7 @@ export async function removePortfolio(id: string) {
   const { error } = await supabase.from("portfolios").delete().eq("id", id);
   if (error) throw error;
 
-  const marker = "/profile-media/";
-  const imagePath = item.imagem_url?.split(marker)[1];
-  if (imagePath)
-    await supabase.storage
-      .from("profile-media")
-      .remove([decodeURIComponent(imagePath)]);
+  await removeProfileMedia(item.imagem_url);
 }
 
 export async function saveReviewReply(

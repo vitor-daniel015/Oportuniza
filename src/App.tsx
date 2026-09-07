@@ -7,6 +7,8 @@ import { SingUpPage } from "./pages/SingUpPage";
 import { AuthProvider } from "./contexts/AuthContext";
 import { PerfilPage } from "./pages/PerfilPage";
 import { MeuPerfilPage } from "./pages/MeuPerfilPage";
+import { PrivacyPolicyPage } from "./pages/PrivacyPolicyPage";
+import { TermsPage } from "./pages/TermsPage";
 
 export default function App() {
   return (
@@ -21,6 +23,8 @@ export default function App() {
           <Route path="/meu-perfil" element={<MeuPerfilPage />} />
           <Route path="/entrar" element={<SingInPage />} />
           <Route path="/cadastrar" element={<SingUpPage />} />
+          <Route path="/termos-de-uso" element={<TermsPage />} />
+          <Route path="/politica-de-privacidade" element={<PrivacyPolicyPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </BrowserRouter>

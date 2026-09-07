@@ -5,18 +5,25 @@ import { signInWithGoogle, type UserRole } from "../service/LoginService";
 type GoogleProps = {
   mode?: "signin" | "signup";
   role?: UserRole;
+  termsAccepted?: boolean;
 };
 
-const Google = ({ mode = "signin", role }: GoogleProps) => {
+const Google = ({ mode = "signin", role, termsAccepted = false }: GoogleProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [choiceOpen, setChoiceOpen] = useState(false);
+  const [acceptedInDialog, setAcceptedInDialog] = useState(false);
 
-  async function continueWithGoogle(selectedRole?: UserRole) {
+  async function continueWithGoogle(selectedRole?: UserRole, accepted = false) {
     setIsLoading(true);
     setErrorMessage("");
     try {
-      const { error } = await signInWithGoogle(selectedRole);
+      if (selectedRole && !accepted) {
+        setErrorMessage("Aceite os Termos de Uso e a Política de Privacidade para criar a conta.");
+        setIsLoading(false);
+        return;
+      }
+      const { error } = await signInWithGoogle(selectedRole, accepted);
       if (error) setErrorMessage(error.message);
     } catch {
       setErrorMessage("Não foi possível entrar com o Google. Tente novamente.");
@@ -26,7 +33,7 @@ const Google = ({ mode = "signin", role }: GoogleProps) => {
   }
 
   function handleGoogleLogin() {
-    if (mode === "signup") void continueWithGoogle(role);
+    if (mode === "signup") void continueWithGoogle(role, termsAccepted);
     else setChoiceOpen(true);
   }
 
@@ -98,17 +105,21 @@ const Google = ({ mode = "signin", role }: GoogleProps) => {
             </p>
 
             <div className="mt-5 space-y-3">
+              <label className="flex items-start gap-3 rounded-xl bg-blue-50 p-4 text-sm leading-relaxed">
+                <input type="checkbox" checked={acceptedInDialog} onChange={(e)=>setAcceptedInDialog(e.target.checked)} className="mt-1 h-5 w-5 shrink-0 accent-[#49a75d]" />
+                <span>Para criar uma conta, aceito os <a href="/termos-de-uso" target="_blank" className="font-bold underline">Termos de Uso</a> e a <a href="/politica-de-privacidade" target="_blank" className="font-bold underline">Política de Privacidade</a>.</span>
+              </label>
               <ChoiceButton
                 icon={<UserRound size={25} />}
                 title="Quero contratar um serviço"
                 description="Vou procurar profissionais para realizar um trabalho."
-                onClick={() => void continueWithGoogle("contratante")}
+                onClick={() => void continueWithGoogle("contratante", acceptedInDialog)}
               />
               <ChoiceButton
                 icon={<BriefcaseBusiness size={25} />}
                 title="Quero oferecer meus serviços"
                 description="Sou profissional e quero divulgar meu trabalho para clientes."
-                onClick={() => void continueWithGoogle("prestador")}
+                onClick={() => void continueWithGoogle("prestador", acceptedInDialog)}
               />
               <button
                 type="button"

@@ -22,14 +22,9 @@ const blockedTerms = new Set(
 export function findBlockedTerm(value: string) {
   const normalized = normalizeText(value);
   const words = normalized.split(" ").filter(Boolean);
-  const compactText = words.join("");
 
   for (const term of blockedTerms) {
     if (term.includes(" ") ? normalized.includes(term) : words.includes(term))
-      return term;
-
-    const compactTerm = term.replace(/\s/g, "");
-    if (compactTerm.length >= 4 && compactText.includes(compactTerm))
       return term;
   }
 

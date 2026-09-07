@@ -1,6 +1,6 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { Link, useParams } from "react-router-dom";
-import { MapPin, MessageCircle, Quote } from "lucide-react";
+import { MapPin, Quote } from "lucide-react";
 import {
   getPerfilPublico,
   submitProviderReview,
@@ -156,6 +156,17 @@ export function Perfil() {
     }
   }
 
+  function WhatsAppIcon({ className = "" }: { className?: string }) {
+    return (
+      <svg viewBox="0 0 32 32" aria-hidden="true" className={className}>
+        <path
+          fill="currentColor"
+          d="M16.004 3C8.82 3 3 8.82 3 16.004c0 2.822.93 5.57 2.64 7.822L3 29l5.338-1.598a12.94 12.94 0 0 0 7.666 2.402H16c7.184 0 13.004-5.82 13.004-13.004C29.004 8.82 23.184 3 16.004 3zm0 23.676a10.57 10.57 0 0 1-5.39-1.48l-.386-.23-3.17.95.846-3.09-.25-.4a10.62 10.62 0 1 1 8.35 4.25zm5.82-7.95c-.32-.16-1.89-.93-2.18-1.03-.29-.11-.5-.16-.71.16-.21.32-.82 1.03-1 1.24-.18.21-.36.24-.68.08-.32-.16-1.33-.49-2.53-1.57-.94-.84-1.57-1.88-1.76-2.2-.18-.32-.02-.5.14-.66.14-.14.32-.36.48-.53.16-.18.21-.32.32-.53.1-.21.05-.4-.03-.56-.08-.16-.71-1.71-.98-2.35-.26-.62-.52-.53-.71-.54h-.61c-.21 0-.56.08-.85.4-.29.32-1.12 1.1-1.12 2.67s1.15 3.08 1.31 3.29c.16.21 2.26 3.45 5.47 4.84.76.33 1.36.52 1.82.66.77.24 1.46.2 2.01.12.61-.09 1.89-.77 2.16-1.5.27-.74.27-1.37.19-1.5-.08-.13-.29-.21-.61-.37z"
+        />
+      </svg>
+    );
+  }
+
   return (
     <main className="pb-8">
       <section className="relative bg-linear-to-r from-blue-depth via-[#27737c] to-green-sprout text-white md:mt-14">
@@ -240,33 +251,18 @@ export function Perfil() {
               Sobre mim
             </h2>
             <div className="mt-2 min-h-36 rounded-3xl border border-gray-300 bg-white p-5 text-sm leading-relaxed text-text-body shadow-md md:text-base">
-              {descricao ||
-                "Este profissional ainda não adicionou uma descrição."}
+              {descricao || "Este profissional ainda não adicionou uma descrição."}
             </div>
           </div>
         </section>
-
-        {whatsappComPais ? (
-          <a
+        <a
             href={`https://wa.me/${whatsappComPais}?text=${mensagemWhatsapp}`}
             target="_blank"
             rel="noreferrer"
             className="mt-9 flex w-full items-center justify-center gap-3 rounded-lg bg-green-sprout px-6 py-4 text-xl font-extrabold text-white transition hover:brightness-105 md:text-3xl"
           >
-            <MessageCircle size={32} />
-            Enviar mensagem
+            <WhatsAppIcon className="h-8 w-8" /> Enviar mensagem
           </a>
-        ) : (
-          <button
-            type="button"
-            disabled
-            title="Este prestador ainda não informou o WhatsApp"
-            className="mt-9 flex w-full cursor-not-allowed items-center justify-center gap-3 rounded-lg bg-green-sprout px-6 py-4 text-xl font-extrabold text-white opacity-70 md:text-3xl"
-          >
-            <MessageCircle size={32} />
-            Enviar mensagem
-          </button>
-        )}
 
         <section className="mt-12">
           <h2 className="text-2xl font-extrabold text-text-title md:text-3xl">

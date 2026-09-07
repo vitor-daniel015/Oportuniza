@@ -1,3 +1,4 @@
+-- Esquema-base. Execute também, em ordem, os arquivos de supabase/migrations.
 create extension if not exists "pgcrypto";
 
 create type public.user_role as enum('contratante', 'prestador', 'admin');
@@ -13,13 +14,21 @@ create table public.profiles (
   id uuid primary key references auth.users (id) on delete cascade,
   role public.user_role not null default 'contratante',
   nome text not null,
-  cpf text unique,
+  cpf text,
+  cpf_encrypted bytea,
+  cpf_fingerprint text,
+  cpf_cadastrado boolean not null default false,
   data_nascimento date,
   whatsapp text,
+  whatsapp_publico boolean not null default false,
   cidade text,
   estado char(2),
   avatar_url text,
   bio text,
+  cadastro_completo boolean not null default false,
+  onboarding_completo boolean not null default false,
+  termos_aceitos_em timestamptz,
+  politica_versao text,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
@@ -104,9 +113,11 @@ alter table public.review_replies enable row level security;
 
 alter table public.favorites enable row level security;
 
-create policy "profiles public" on public.profiles for
-select
-  using (true);
+create unique index profiles_cpf_fingerprint_key on public.profiles(cpf_fingerprint)
+  where cpf_fingerprint is not null;
+
+create policy "profile read own" on public.profiles for select to authenticated
+  using (auth.uid() = id);
 
 create policy "own profile" on public.profiles
 for update
@@ -116,17 +127,15 @@ create policy "categories public" on public.categories for
 select
   using (true);
 
-create policy "services public" on public.professional_services for
-select
-  using (true);
+create policy "services complete provider" on public.professional_services for select
+  using (exists(select 1 from public.profiles p where p.id=prestador_id and p.cadastro_completo));
 
 create policy "own services" on public.professional_services for all using (auth.uid () = prestador_id)
 with
   check (auth.uid () = prestador_id);
 
-create policy "portfolio public" on public.portfolios for
-select
-  using (true);
+create policy "portfolio complete provider" on public.portfolios for select
+  using (exists(select 1 from public.profiles p where p.id=prestador_id and p.cadastro_completo));
 
 create policy "own portfolio" on public.portfolios for all using (auth.uid () = prestador_id)
 with
@@ -144,9 +153,8 @@ create policy "client creates request" on public.service_requests for insert
 with
   check (auth.uid () = contratante_id);
 
-create policy "reviews public" on public.reviews for
-select
-  using (true);
+create policy "reviews complete provider" on public.reviews for select
+  using (exists(select 1 from public.profiles p where p.id=avaliado_id and p.cadastro_completo));
 
 create policy "valid completed review" on public.reviews for insert
 with
@@ -164,9 +172,8 @@ with
     )
   );
 
-create policy "replies public" on public.review_replies for
-select
-  using (true);
+create policy "replies published reviews" on public.review_replies for select
+  using (exists(select 1 from public.reviews r join public.profiles p on p.id=r.avaliado_id where r.id=avaliacao_id and p.cadastro_completo));
 
 create policy "own reply" on public.review_replies for all using (auth.uid () = prestador_id)
 with
@@ -180,14 +187,17 @@ create or replace function public.handle_new_user () returns trigger language pl
 set
   search_path = public as $$
 begin
-  insert into public.profiles (id, nome, role)
+  insert into public.profiles (id, nome, email, role, termos_aceitos_em, politica_versao)
   values (
     new.id,
-    coalesce(nullif(trim(new.raw_user_meta_data->>'nome'), ''), 'Usuário'),
+    coalesce(nullif(trim(new.raw_user_meta_data->>'name'), ''), nullif(trim(new.raw_user_meta_data->>'full_name'), ''), 'Usuário'),
+    new.email,
     case
       when new.raw_user_meta_data->>'role' = 'prestador' then 'prestador'::public.user_role
       else 'contratante'::public.user_role
-    end
+    end,
+    case when new.raw_user_meta_data->>'legal_version' is not null then now() else null end,
+    new.raw_user_meta_data->>'legal_version'
   );
   return new;
 end;

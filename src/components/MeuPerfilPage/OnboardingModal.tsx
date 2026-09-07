@@ -32,6 +32,7 @@ export function OnboardingModal({
   error,
   onUploadAvatar,
   onSubmit,
+  cpfAlreadyRegistered,
 }: {
   form: SaveProfileInput;
   setForm: ProfileFormSetter;
@@ -40,6 +41,7 @@ export function OnboardingModal({
   error: string;
   onUploadAvatar: (file: File) => Promise<string>;
   onSubmit: (event: FormEvent) => void;
+  cpfAlreadyRegistered: boolean;
 }) {
   const [step, setStep] = useState(0);
   const [stepError, setStepError] = useState("");
@@ -48,7 +50,7 @@ export function OnboardingModal({
 
   function validateCurrentStep() {
     if (step === 1) {
-      if (form.cpf.replace(/\D/g, "").length !== 11)
+      if (!cpfAlreadyRegistered && form.cpf.replace(/\D/g, "").length !== 11)
         return "Digite um CPF com 11 números.";
       const phoneLength = form.whatsapp.replace(/\D/g, "").length;
       if (phoneLength < 10 || phoneLength > 13)
@@ -157,6 +159,9 @@ export function OnboardingModal({
                     setForm({ ...form, cpf: event.target.value })
                   }
                 />
+                {cpfAlreadyRegistered && !form.cpf && (
+                  <p className="-mt-2 text-xs font-semibold text-green-700">CPF já protegido e cadastrado. Preencha somente se quiser substituí-lo.</p>
+                )}
                 <InputField
                   id="onboarding-whatsapp"
                   type="tel"
@@ -168,9 +173,15 @@ export function OnboardingModal({
                   }
                 />
                 <p className="rounded-xl bg-blue-50 p-3 text-xs leading-relaxed text-blue-depth">
-                  O WhatsApp aparecerá como botão de contato para os clientes
-                  falarem diretamente com você.
+                  Seu número só aparecerá publicamente se você autorizar abaixo.
                 </p>
+                <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-gray-200 p-4 text-sm leading-relaxed">
+                  <input type="checkbox" checked={form.whatsappPublico}
+                    onChange={(event) => setForm({ ...form, whatsappPublico: event.target.checked })}
+                    className="mt-1 h-5 w-5 shrink-0 accent-[#49a75d]" />
+                  <span><strong>Autorizo exibir meu WhatsApp no perfil público.</strong><br />
+                    Assim, visitantes poderão abrir uma conversa comigo. Posso retirar esta autorização depois.</span>
+                </label>
               </div>
             </section>
           )}

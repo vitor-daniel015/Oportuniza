@@ -2,7 +2,6 @@ import {
   Camera,
   Eye,
   LogOut,
-  MessageCircle,
   Pencil,
   Plus,
   Trash2,
@@ -16,9 +15,12 @@ import { signOut } from "../../service/LoginService";
 import { applyPendingGoogleRole } from "../../service/LoginService";
 import {
   addPortfolio,
+  cleanupUnusedProfileMedia,
+  deleteMyAccount,
   getMeuConteudo,
   getMeuPerfil,
   removePortfolio,
+  removeProfileMedia,
   saveMeuPerfil,
   saveReviewReply,
   uploadAvatar,
@@ -47,6 +49,7 @@ const emptyForm: SaveProfileInput = {
   avatarUrl: "",
   bio: "",
   categoriaId: "",
+  whatsappPublico: false,
 };
 
 export function MeuPerfil() {
@@ -92,6 +95,14 @@ export function MeuPerfil() {
       avatarUrl: p.avatar_url ?? "",
       bio: p.bio ?? "",
       categoriaId: profileData.categoriaId,
+      whatsappPublico: p.whatsapp_publico,
+    });
+    // Remove sobras de uploads interrompidos sem tocar em arquivos referenciados.
+    void cleanupUnusedProfileMedia(id, [
+      p.avatar_url,
+      ...content.portfolio.map((item) => item.imagem_url),
+    ]).catch(() => {
+      // A limpeza é auxiliar e não deve impedir o carregamento do perfil.
     });
   }
 
@@ -155,9 +166,13 @@ export function MeuPerfil() {
     try {
       setSaving(true);
       const avatarUrl = await uploadAvatar(user.id, file);
+      const previousAvatar = form.avatarUrl;
       const next = { ...form, avatarUrl };
       setForm(next);
-      await persist(next);
+      const saved = await persist(next);
+      if (saved && previousAvatar && previousAvatar !== avatarUrl)
+        await removeProfileMedia(previousAvatar);
+      if (!saved) await removeProfileMedia(avatarUrl);
     } catch (cause) {
       setSaving(false);
       setError(
@@ -221,6 +236,23 @@ export function MeuPerfil() {
     await signOut();
     navigate("/", { replace: true });
   }
+  async function deleteAccount() {
+    if (!user) return;
+    const confirmation = window.prompt(
+      "Esta ação apaga sua conta, perfil, portfólio e avaliações. Digite EXCLUIR para confirmar.",
+    );
+    if (confirmation !== "EXCLUIR") return;
+    try {
+      setSaving(true);
+      setError("");
+      await deleteMyAccount(user.id);
+      await signOut();
+      navigate("/", { replace: true });
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : "Não foi possível excluir sua conta.");
+      setSaving(false);
+    }
+  }
 
   if (authLoading || loading)
     return (
@@ -242,6 +274,17 @@ export function MeuPerfil() {
   const address = [form.bairro, form.cidade, form.estado]
     .filter(Boolean)
     .join(", ");
+ 
+  function WhatsAppIcon({ className = "" }: { className?: string }) {
+    return (
+      <svg viewBox="0 0 32 32" aria-hidden="true" className={className}>
+        <path
+          fill="currentColor"
+          d="M16.004 3C8.82 3 3 8.82 3 16.004c0 2.822.93 5.57 2.64 7.822L3 29l5.338-1.598a12.94 12.94 0 0 0 7.666 2.402H16c7.184 0 13.004-5.82 13.004-13.004C29.004 8.82 23.184 3 16.004 3zm0 23.676a10.57 10.57 0 0 1-5.39-1.48l-.386-.23-3.17.95.846-3.09-.25-.4a10.62 10.62 0 1 1 8.35 4.25zm5.82-7.95c-.32-.16-1.89-.93-2.18-1.03-.29-.11-.5-.16-.71.16-.21.32-.82 1.03-1 1.24-.18.21-.36.24-.68.08-.32-.16-1.33-.49-2.53-1.57-.94-.84-1.57-1.88-1.76-2.2-.18-.32-.02-.5.14-.66.14-.14.32-.36.48-.53.16-.18.21-.32.32-.53.1-.21.05-.4-.03-.56-.08-.16-.71-1.71-.98-2.35-.26-.62-.52-.53-.71-.54h-.61c-.21 0-.56.08-.85.4-.29.32-1.12 1.1-1.12 2.67s1.15 3.08 1.31 3.29c.16.21 2.26 3.45 5.47 4.84.76.33 1.36.52 1.82.66.77.24 1.46.2 2.01.12.61-.09 1.89-.77 2.16-1.5.27-.74.27-1.37.19-1.5-.08-.13-.29-.21-.61-.37z"
+        />
+      </svg>
+    );
+  }
 
   return (
     <main className="pb-12">
@@ -361,7 +404,7 @@ export function MeuPerfil() {
             rel="noreferrer"
             className="mt-9 flex w-full items-center justify-center gap-3 rounded-lg bg-green-sprout px-6 py-4 text-xl font-extrabold text-white md:text-3xl"
           >
-            <MessageCircle size={32} /> Enviar mensagem
+            <WhatsAppIcon className="h-8 w-8" /> Enviar mensagem
           </a>
         )}
 
@@ -424,6 +467,16 @@ export function MeuPerfil() {
             )}
           </section>
         )}
+        <section className="mt-12 rounded-2xl border border-red-200 bg-red-50 p-5">
+          <h2 className="text-xl font-extrabold text-red-800">Excluir minha conta</h2>
+          <p className="mt-2 text-sm leading-relaxed text-red-700">
+            Apaga definitivamente seu perfil, trabalhos, avaliações relacionadas e imagens enviadas.
+          </p>
+          <button type="button" onClick={deleteAccount} disabled={saving}
+            className="mt-4 flex items-center gap-2 rounded-xl bg-red-700 px-5 py-3 font-bold text-white disabled:opacity-60">
+            <Trash2 size={18} /> Excluir conta e meus dados
+          </button>
+        </section>
 
         {isProvider && (
           <ReviewsSection
@@ -478,6 +531,7 @@ export function MeuPerfil() {
           error={error}
           onUploadAvatar={uploadOnboardingAvatar}
           onSubmit={submitProfile}
+          cpfAlreadyRegistered={perfil.cpf_cadastrado}
         />
       )}
     </main>
