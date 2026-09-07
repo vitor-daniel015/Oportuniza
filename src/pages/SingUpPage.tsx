@@ -1,7 +1,5 @@
-import { SingUp } from "../components/SingUpPage/SingUp"
+import { SingUp } from "../components/SingUpPage/SingUp";
 
 export function SingUpPage() {
-    return(
-        <SingUp />
-    )
+  return <SingUp />;
 }

@@ -1,4 +1,14 @@
-import { Facebook, Github, Instagram, Mail, MapPin, Phone, Send, Twitter, Youtube } from "lucide-react";
+import {
+  Facebook,
+  Github,
+  Instagram,
+  Mail,
+  MapPin,
+  Phone,
+  Send,
+  Twitter,
+  Youtube,
+} from "lucide-react";
 
 const socialLinks = [
   { label: "Facebook", icon: Facebook, href: "https://facebook.com" },
@@ -25,7 +35,9 @@ const quickInfos = [
 
 export function Footer({ overlap = false }: { overlap?: boolean }) {
   return (
-    <footer className={`relative bg-blue-depth pt-24 text-white [clip-path:polygon(0_5%,100%_12%,100%_100%,0_100%)] lg:pt-28 lg:[clip-path:polygon(0_8%,100%_18%,100%_100%,0_100%)] ${overlap ? "-mt-24 sm:-mt-28 lg:-mt-40" : "mt-8"}`}>
+    <footer
+      className={`relative bg-blue-depth pt-24 text-white [clip-path:polygon(0_5%,100%_12%,100%_100%,0_100%)] lg:pt-28 lg:[clip-path:polygon(0_8%,100%_18%,100%_100%,0_100%)] ${overlap ? "-mt-24 sm:-mt-28 lg:-mt-40" : "mt-8"}`}
+    >
       <div className="mx-auto max-w-7xl px-5 pb-7 pt-12 sm:px-12 lg:px-10 lg:pt-16">
         <img
           src="/assets/oportuniza-completo-branco.png"
@@ -34,7 +46,6 @@ export function Footer({ overlap = false }: { overlap?: boolean }) {
         />
 
         <div className="mt-10 flex flex-col items-center gap-y-10 text-center lg:mt-4 lg:grid lg:grid-cols-[45px_1.4fr_.8fr_1fr] lg:items-center lg:gap-10 lg:text-left">
-
           <div className="order-4 flex w-full items-center justify-center gap-4 border-b border-white/75 pb-9 sm:gap-6 lg:order-1 lg:col-span-1 lg:w-auto lg:flex-col lg:items-start lg:justify-start lg:gap-5 lg:border-0 lg:p-0">
             {socialLinks.map(({ label, icon: Icon, href }) => (
               <a
@@ -60,7 +71,11 @@ export function Footer({ overlap = false }: { overlap?: boolean }) {
             </h2>
             <nav className="mt-4 flex w-fit flex-col items-start space-y-3 text-sm text-white/90 lg:mt-6 lg:text-white/80">
               {quickLinks.map((link) => (
-                <a key={link.label} className="block text-left transition-colors hover:text-green-herbal" href={link.href}>
+                <a
+                  key={link.label}
+                  className="block text-left transition-colors hover:text-green-herbal"
+                  href={link.href}
+                >
                   {link.label}
                 </a>
               ))}
@@ -74,7 +89,10 @@ export function Footer({ overlap = false }: { overlap?: boolean }) {
             <div className="mt-4 flex w-fit flex-col items-start space-y-4 text-sm text-white/90 lg:mt-6 lg:space-y-3 lg:text-white/80">
               {quickInfos.map(({ label, icon: Icon }) => (
                 <p key={label} className="flex items-center gap-3 text-left">
-                  <Icon className="h-5 w-5 shrink-0 lg:h-6 lg:w-6" strokeWidth={1.4} />
+                  <Icon
+                    className="h-5 w-5 shrink-0 lg:h-6 lg:w-6"
+                    strokeWidth={1.4}
+                  />
                   <span>{label}</span>
                 </p>
               ))}

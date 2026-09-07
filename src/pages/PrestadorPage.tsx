@@ -4,15 +4,13 @@ import { Navbar } from "../components/Navbar";
 import { Prestador } from "../components/PrestadorPage/Prestador";
 
 export function PrestadorPage() {
-    const navigate = useNavigate();
-    return (
-        <div className="min-h-screen color-background">
-            <Navbar onAuthClick={() => navigate("/entrar")} />
-            <main>
-            <Prestador />
-            </main>
-            <Footer />
-        </div>
-    );
+  const navigate = useNavigate();
+  return (
+    <div className="min-h-screen color-background">
+      <Navbar onAuthClick={() => navigate("/entrar")} />
+        <Prestador />
+      <Footer />
+    </div>
+  );
 }
 export default PrestadorPage;

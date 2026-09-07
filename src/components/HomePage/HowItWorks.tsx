@@ -4,7 +4,8 @@ const steps = [
   {
     id: 1,
     title: "Encontre Profissionais",
-    description: "Pesquise por serviço e localize profissionais próximos a você.",
+    description:
+      "Pesquise por serviço e localize profissionais próximos a você.",
     icon: Search,
   },
   {
@@ -23,13 +24,15 @@ const steps = [
   },
 ];
 
-
 export function HowItWorks() {
   return (
     <section className="py-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <header className="mb-16 text-center">
-          <h2 className="mb-4 text-3xl font-bold text-text-title md:text-4xl" id="ComoFunciona">
+          <h2
+            className="mb-4 text-3xl font-bold text-text-title md:text-4xl"
+            id="ComoFunciona"
+          >
             Como Funciona
           </h2>
           <p className="text-lg font-semibold text-text-title">
@@ -50,9 +53,7 @@ export function HowItWorks() {
                   <Icon size={32} />
                 </div>
                 <h3 className="mb-3 text-xl font-bold text-text-title">
-                  <span className="mr-2 text-green-sprout">
-                    {step.id} -
-                  </span>
+                  <span className="mr-2 text-green-sprout">{step.id} -</span>
                   {step.title}
                 </h3>
                 <p className="max-w-xs text-sm leading-relaxed text-text-secondary">

@@ -7,11 +7,20 @@ interface InputFieldProps extends InputHTMLAttributes<HTMLInputElement> {
   placeholder: string;
 }
 
-export function InputField({ label, id, type, placeholder, ...inputProps }: InputFieldProps) {
+export function InputField({
+  label,
+  id,
+  type,
+  placeholder,
+  ...inputProps
+}: InputFieldProps) {
   return (
     <div className="flex flex-col text-left">
       {label && (
-        <label htmlFor={id} className="mb-1 ml-4 text-xs font-medium text-gray-600">
+        <label
+          htmlFor={id}
+          className="mb-1 ml-4 text-xs font-medium text-gray-600"
+        >
           {label}
         </label>
       )}

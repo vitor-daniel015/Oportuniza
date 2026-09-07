@@ -1,7 +1,5 @@
-import {SingIn} from "../components/SingInPage/SingIn"
+import { SingIn } from "../components/SingInPage/SingIn";
 
 export function SingInPage() {
-    return(
-        <SingIn />
-    )
+  return <SingIn />;
 }

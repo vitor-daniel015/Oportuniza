@@ -4,7 +4,12 @@ export type UserRole = "contratante" | "prestador";
 
 const pendingGoogleRoleKey = "oportuniza:pending-google-role";
 
-export async function signUp(name: string, email: string, password: string, role: UserRole) {
+export async function signUp(
+  name: string,
+  email: string,
+  password: string,
+  role: UserRole,
+) {
   return supabase.auth.signUp({
     email,
     password,

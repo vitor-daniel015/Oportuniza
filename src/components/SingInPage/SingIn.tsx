@@ -30,11 +30,18 @@ export function SingIn() {
   return (
     <main className="min-h-screen bg-[#f4f6f7]">
       <section className="flex min-h-screen w-full flex-col overflow-hidden bg-[#f4f6f7] lg:flex-row">
-
         {/* Banner à direita no desktop */}
         <aside className="relative flex min-h-77.7 flex-col overflow-hidden bg-[#215985] px-7 py-7 text-white lg:order-2 lg:min-h-full lg:w-[47%] lg:px-12 lg:py-10 lg:[clip-path:polygon(0_0,100%_0,100%_100%,18%_100%)]">
-          <Link to="/" aria-label="Voltar para o início" className="absolute top-6 right-6 lg:top-10 lg:right-10">
-            <img src="/assets/oportuniza-completo-branco.png" alt="Oportuniza" className="w-36 lg:w-44" />
+          <Link
+            to="/"
+            aria-label="Voltar para o início"
+            className="absolute top-6 right-6 lg:top-10 lg:right-10"
+          >
+            <img
+              src="/assets/oportuniza-completo-branco.png"
+              alt="Oportuniza"
+              className="w-36 lg:w-44"
+            />
           </Link>
 
           <div className="relative mx-auto my-auto grid h-44 w-full place-items-center lg:h-96">
@@ -77,7 +84,10 @@ export function SingIn() {
               />
 
               {message && (
-                <p role="alert" className="rounded-xl bg-blue-50 px-4 py-3 text-sm text-blue-depth">
+                <p
+                  role="alert"
+                  className="rounded-xl bg-blue-50 px-4 py-3 text-sm text-blue-depth"
+                >
                   {message}
                 </p>
               )}

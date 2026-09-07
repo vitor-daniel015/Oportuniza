@@ -46,7 +46,9 @@ const Google = ({ mode = "signin", role }: GoogleProps) => {
         ) : (
           <>
             <GoogleIcon />
-            {mode === "signup" ? "Criar conta com o Google" : "Entrar com o Google"}
+            {mode === "signup"
+              ? "Criar conta com o Google"
+              : "Entrar com o Google"}
           </>
         )}
       </button>
@@ -57,13 +59,19 @@ const Google = ({ mode = "signin", role }: GoogleProps) => {
         </p>
       )}
       {errorMessage && (
-        <p role="alert" className="mt-2 rounded-lg bg-red-50 px-3 py-2 text-center text-xs text-red-600">
+        <p
+          role="alert"
+          className="mt-2 rounded-lg bg-red-50 px-3 py-2 text-center text-xs text-red-600"
+        >
           {errorMessage}
         </p>
       )}
 
       {choiceOpen && (
-        <div className="fixed inset-0 z-60 grid place-items-center overflow-y-auto bg-[#101522]/65 p-4" onMouseDown={() => setChoiceOpen(false)}>
+        <div
+          className="fixed inset-0 z-60 grid place-items-center overflow-y-auto bg-[#101522]/65 p-4"
+          onMouseDown={() => setChoiceOpen(false)}
+        >
           <section
             role="dialog"
             aria-modal="true"
@@ -71,10 +79,18 @@ const Google = ({ mode = "signin", role }: GoogleProps) => {
             className="relative my-auto w-full max-w-lg rounded-3xl bg-white p-5 shadow-2xl sm:p-8"
             onMouseDown={(event) => event.stopPropagation()}
           >
-            <button type="button" onClick={() => setChoiceOpen(false)} aria-label="Fechar" className="absolute right-4 top-4 rounded-full p-2 text-gray-600 hover:bg-gray-100">
+            <button
+              type="button"
+              onClick={() => setChoiceOpen(false)}
+              aria-label="Fechar"
+              className="absolute right-4 top-4 rounded-full p-2 text-gray-600 hover:bg-gray-100"
+            >
               <X size={24} />
             </button>
-            <h2 id="google-choice-title" className="pr-10 text-2xl font-extrabold text-text-title">
+            <h2
+              id="google-choice-title"
+              className="pr-10 text-2xl font-extrabold text-text-title"
+            >
               Como você deseja continuar?
             </h2>
             <p className="mt-2 text-sm leading-relaxed text-text-secondary">
@@ -110,13 +126,31 @@ const Google = ({ mode = "signin", role }: GoogleProps) => {
   );
 };
 
-function ChoiceButton({ icon, title, description, onClick }: { icon: ReactNode; title: string; description: string; onClick: () => void }) {
+function ChoiceButton({
+  icon,
+  title,
+  description,
+  onClick,
+}: {
+  icon: ReactNode;
+  title: string;
+  description: string;
+  onClick: () => void;
+}) {
   return (
-    <button type="button" onClick={onClick} className="flex w-full items-start gap-4 rounded-2xl border-2 border-gray-200 p-4 text-left transition hover:border-green-sprout hover:bg-green-50">
-      <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-blue-depth text-white">{icon}</span>
+    <button
+      type="button"
+      onClick={onClick}
+      className="flex w-full items-start gap-4 rounded-2xl border-2 border-gray-200 p-4 text-left transition hover:border-green-sprout hover:bg-green-50"
+    >
+      <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-blue-depth text-white">
+        {icon}
+      </span>
       <span>
         <strong className="block text-base text-text-title">{title}</strong>
-        <span className="mt-1 block text-sm leading-relaxed text-text-secondary">{description}</span>
+        <span className="mt-1 block text-sm leading-relaxed text-text-secondary">
+          {description}
+        </span>
       </span>
     </button>
   );
@@ -124,11 +158,28 @@ function ChoiceButton({ icon, title, description, onClick }: { icon: ReactNode; 
 
 function GoogleIcon() {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid" viewBox="0 0 256 262" className="h-5 w-5 shrink-0">
-      <path fill="#4285F4" d="M255.878 133.451c0-10.734-.871-18.567-2.756-26.69H130.55v48.448h71.947c-1.45 12.04-9.283 30.172-26.69 42.356l-.244 1.622 38.755 30.023 2.685.268c24.659-22.774 38.875-56.282 38.875-96.027" />
-      <path fill="#34A853" d="M130.55 261.1c35.248 0 64.839-11.605 86.453-31.622l-41.196-31.913c-11.024 7.688-25.82 13.055-45.257 13.055-34.523 0-63.824-22.773-74.269-54.25l-1.531.13-40.298 31.187-.527 1.465C35.393 231.798 79.49 261.1 130.55 261.1" />
-      <path fill="#FBBC05" d="M56.281 156.37c-2.756-8.123-4.351-16.827-4.351-25.82 0-8.994 1.595-17.697 4.206-25.82l-.073-1.73L15.26 71.312l-1.335.635C5.077 89.644 0 109.517 0 130.55s5.077 40.905 13.925 58.602l42.356-32.782" />
-      <path fill="#EB4335" d="M130.55 50.479c24.514 0 41.05 10.589 50.479 19.438l36.844-35.974C195.245 12.91 165.798 0 130.55 0 79.49 0 35.393 29.301 13.925 71.947l42.211 32.783c10.59-31.477 39.891-54.251 74.414-54.251" />
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      preserveAspectRatio="xMidYMid"
+      viewBox="0 0 256 262"
+      className="h-5 w-5 shrink-0"
+    >
+      <path
+        fill="#4285F4"
+        d="M255.878 133.451c0-10.734-.871-18.567-2.756-26.69H130.55v48.448h71.947c-1.45 12.04-9.283 30.172-26.69 42.356l-.244 1.622 38.755 30.023 2.685.268c24.659-22.774 38.875-56.282 38.875-96.027"
+      />
+      <path
+        fill="#34A853"
+        d="M130.55 261.1c35.248 0 64.839-11.605 86.453-31.622l-41.196-31.913c-11.024 7.688-25.82 13.055-45.257 13.055-34.523 0-63.824-22.773-74.269-54.25l-1.531.13-40.298 31.187-.527 1.465C35.393 231.798 79.49 261.1 130.55 261.1"
+      />
+      <path
+        fill="#FBBC05"
+        d="M56.281 156.37c-2.756-8.123-4.351-16.827-4.351-25.82 0-8.994 1.595-17.697 4.206-25.82l-.073-1.73L15.26 71.312l-1.335.635C5.077 89.644 0 109.517 0 130.55s5.077 40.905 13.925 58.602l42.356-32.782"
+      />
+      <path
+        fill="#EB4335"
+        d="M130.55 50.479c24.514 0 41.05 10.589 50.479 19.438l36.844-35.974C195.245 12.91 165.798 0 130.55 0 79.49 0 35.393 29.301 13.925 71.947l42.211 32.783c10.59-31.477 39.891-54.251 74.414-54.251"
+      />
     </svg>
   );
 }

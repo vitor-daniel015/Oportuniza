@@ -61,7 +61,10 @@ export function PortfolioLightbox({
           />
         </div>
         <figcaption className="shrink-0 px-5 py-4 sm:px-7">
-          <h2 id="portfolio-image-title" className="text-lg font-extrabold text-text-title sm:text-xl">
+          <h2
+            id="portfolio-image-title"
+            className="text-lg font-extrabold text-text-title sm:text-xl"
+          >
             {image.titulo}
           </h2>
           {image.descricao && (

@@ -1,4 +1,4 @@
-import { supabase } from './supabaseClient';
+import { supabase } from "./supabaseClient";
 
 export interface PrestadorPublico {
   service_id: string;
@@ -16,21 +16,12 @@ export interface PrestadorPublico {
 }
 
 export async function getPrestadoresPublicos(): Promise<PrestadorPublico[]> {
-const { data, error } = await supabase.rpc('get_prestadores_publicos');
+  const { data, error } = await supabase.rpc("get_prestadores_publicos");
 
   if (error) {
-    console.error('Erro ao buscar prestadores:', error);
+    console.error("Erro ao buscar prestadores:", error);
     throw error;
   }
 
   return (data as PrestadorPublico[]) || [];
 }
-
-
-
-
-
-
-
-
-

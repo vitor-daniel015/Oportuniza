@@ -16,9 +16,7 @@ function normalizeText(value: string) {
 }
 
 const blockedTerms = new Set(
-  [...blockedWords, ...blockedPhrases]
-    .map(normalizeText)
-    .filter(Boolean),
+  [...blockedWords, ...blockedPhrases].map(normalizeText).filter(Boolean),
 );
 
 export function findBlockedTerm(value: string) {
@@ -27,16 +25,22 @@ export function findBlockedTerm(value: string) {
   const compactText = words.join("");
 
   for (const term of blockedTerms) {
-    if (term.includes(" ") ? normalized.includes(term) : words.includes(term)) return term;
+    if (term.includes(" ") ? normalized.includes(term) : words.includes(term))
+      return term;
 
     const compactTerm = term.replace(/\s/g, "");
-    if (compactTerm.length >= 4 && compactText.includes(compactTerm)) return term;
+    if (compactTerm.length >= 4 && compactText.includes(compactTerm))
+      return term;
   }
 
   for (let index = 0; index < words.length; index += 1) {
     if (words[index].length !== 1) continue;
     let joined = "";
-    for (let cursor = index; cursor < Math.min(words.length, index + 12); cursor += 1) {
+    for (
+      let cursor = index;
+      cursor < Math.min(words.length, index + 12);
+      cursor += 1
+    ) {
       if (words[cursor].length !== 1) break;
       joined += words[cursor];
       if (blockedTerms.has(joined)) return joined;
@@ -48,6 +52,8 @@ export function findBlockedTerm(value: string) {
 
 export function assertTextAllowed(value: string) {
   if (findBlockedTerm(value)) {
-    throw new Error("O texto contém linguagem imprópria. Revise o conteúdo antes de publicar.");
+    throw new Error(
+      "O texto contém linguagem imprópria. Revise o conteúdo antes de publicar.",
+    );
   }
 }

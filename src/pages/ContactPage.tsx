@@ -4,15 +4,13 @@ import { Navbar } from "../components/Navbar";
 import { Contact } from "../components/ContactPage/Contact";
 
 export function ContactPage() {
-    const navigate = useNavigate();
-    return (
-        <div className="min-h-screen color-background">
-            <Navbar onAuthClick={() => navigate("/entrar")} />
-            <main>
-            <Contact />
-            </main>
-            <Footer overlap />
-        </div>
-    );
+  const navigate = useNavigate();
+  return (
+    <div className="min-h-screen color-background">
+      <Navbar onAuthClick={() => navigate("/entrar")} />
+        <Contact />
+      <Footer overlap />
+    </div>
+  );
 }
 export default ContactPage;

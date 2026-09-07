@@ -23,11 +23,17 @@ export function SingUp() {
     setLoading(true);
     setMessage("");
 
-    const { data, error } = await signUp(name.trim(), email.trim(), password, role);
+    const { data, error } = await signUp(
+      name.trim(),
+      email.trim(),
+      password,
+      role,
+    );
 
     setLoading(false);
     if (error) return setMessage(error.message);
-    if (!data.session) return setMessage("Conta criada! Confirme seu e-mail para entrar.");
+    if (!data.session)
+      return setMessage("Conta criada! Confirme seu e-mail para entrar.");
     navigate("/meu-perfil", { replace: true });
   }
 
@@ -36,7 +42,11 @@ export function SingUp() {
       <section className="flex min-h-screen w-full flex-col overflow-hidden bg-[#f4f6f7] lg:flex-row">
         <aside className="relative flex min-h-77.7 flex-col overflow-hidden bg-[#215985] px-7 py-7 text-white lg:order-1 lg:min-h-full lg:w-[47%] lg:px-12 lg:py-10 lg:[clip-path:polygon(0_0,100%_0,82%_100%,0_100%)]">
           <Link to="/" aria-label="Voltar para o início">
-            <img src="/assets/oportuniza-completo-branco.png" alt="Oportuniza" className="w-36 lg:w-44" />
+            <img
+              src="/assets/oportuniza-completo-branco.png"
+              alt="Oportuniza"
+              className="w-36 lg:w-44"
+            />
           </Link>
 
           <div className="relative mx-auto my-auto grid h-44 w-full place-items-center lg:h-96">
@@ -60,29 +70,31 @@ export function SingUp() {
                 O que você deseja fazer no Oportuniza?
               </legend>
               <div className="mt-3 grid gap-3 sm:grid-cols-2">
-              <button
-                type="button"
-                onClick={() => setRole("contratante")}
-                aria-pressed={role === "contratante"}
-                className={`rounded-2xl border-2 p-4 text-left transition ${role === "contratante" ? "border-green-sprout bg-green-50 shadow-md" : "border-gray-200 bg-white hover:border-green-sprout/50"}`}
-              >
-                <span className="flex items-center gap-2 font-bold text-text-title">
-                  <UserRound size={20} /> Quero contratar
-                </span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setRole("prestador")}
-                aria-pressed={role === "prestador"}
-                className={`rounded-2xl border-2 p-4 text-left transition ${role === "prestador" ? "border-blue-depth bg-blue-50 shadow-md" : "border-gray-200 bg-white hover:border-blue-depth/50"}`}
-              >
-                <span className="flex items-center gap-2 font-bold text-text-title">
-                  <BriefcaseBusiness size={20} /> Quero trabalhar
-                </span>
-              </button>
+                <button
+                  type="button"
+                  onClick={() => setRole("contratante")}
+                  aria-pressed={role === "contratante"}
+                  className={`rounded-2xl border-2 p-4 text-left transition ${role === "contratante" ? "border-green-sprout bg-green-50 shadow-md" : "border-gray-200 bg-white hover:border-green-sprout/50"}`}
+                >
+                  <span className="flex items-center gap-2 font-bold text-text-title">
+                    <UserRound size={20} /> Quero contratar
+                  </span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setRole("prestador")}
+                  aria-pressed={role === "prestador"}
+                  className={`rounded-2xl border-2 p-4 text-left transition ${role === "prestador" ? "border-blue-depth bg-blue-50 shadow-md" : "border-gray-200 bg-white hover:border-blue-depth/50"}`}
+                >
+                  <span className="flex items-center gap-2 font-bold text-text-title">
+                    <BriefcaseBusiness size={20} /> Quero trabalhar
+                  </span>
+                </button>
               </div>
               <p className="mt-3 rounded-xl bg-white px-4 py-3 text-sm leading-relaxed text-text-secondary shadow-sm">
-                <strong className="text-text-title">{role === "prestador" ? "Prestador:" : "Contratante:"}</strong>{" "}
+                <strong className="text-text-title">
+                  {role === "prestador" ? "Prestador:" : "Contratante:"}
+                </strong>{" "}
                 {role === "prestador"
                   ? "poderá criar um perfil profissional, divulgar seus trabalhos, receber avaliações e clientes."
                   : "poderá procurar profissionais, conversar com eles e avaliar os serviços realizados."}
@@ -123,7 +135,10 @@ export function SingUp() {
               />
 
               {message && (
-                <p role="alert" className="rounded-xl bg-blue-50 px-4 py-3 text-sm text-blue-depth">
+                <p
+                  role="alert"
+                  className="rounded-xl bg-blue-50 px-4 py-3 text-sm text-blue-depth"
+                >
                   {message}
                 </p>
               )}

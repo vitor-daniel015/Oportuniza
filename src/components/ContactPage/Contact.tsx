@@ -1,10 +1,8 @@
-// Contato.tsx
 import React from "react";
 import { MapPin, Phone, PersonStanding, LucideIcon } from "lucide-react";
 import { InputField } from "../InputField";
 import { TextAreaField } from "../TextAreaField";
 import { ContactInfoCard } from "./ContactInfoCard";
-import { BackButton } from "../BackButton";
 
 type ContactInfo = {
   id: string;

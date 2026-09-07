@@ -3,7 +3,10 @@ import { ButtonOportuniza } from "../Button";
 
 export function Hero() {
   return (
-    <section id="inicio" className="mx-auto max-w-280 px-6 pb-16 pt-24 sm:px-10 lg:pb-24 lg:pt-28">
+    <section
+      id="inicio"
+      className="mx-auto max-w-280 px-6 pb-16 pt-24 sm:px-10 lg:pb-24 lg:pt-28"
+    >
       <div className="grid items-center gap-8 lg:grid-cols-[1.3fr_.7fr]">
         <div>
           <h1 className="max-w-172.5 text-[34px] font-extrabold leading-[1.02] tracking-[-.04em] text-text-title min-[380px]:text-[40px] sm:text-[56px] lg:text-[62px]">
@@ -22,8 +25,8 @@ export function Hero() {
             title="Saiba Mais"
             link="#ComoFunciona"
             color="#9ace5f"
-            colorHover="#4da25a">
-          </ButtonOportuniza>
+            colorHover="#4da25a"
+          ></ButtonOportuniza>
         </div>
         <div className="mx-auto aspect-square w-64 max-w-full overflow-hidden sm:h-92.5 sm:w-92.5">
           <img
@@ -36,10 +39,7 @@ export function Hero() {
       <div className="mt-10 grid gap-6 md:grid-cols-2" id="sobrenos">
         <div className="min-h-65 rounded-[7px] bg-white p-7 shadow-[0_12px_30px_rgba(24,70,113,.16)]">
           <div className="flex items-start gap-4">
-            <BadgeCheck
-              className="mt-1 shrink-0 text-green-sprout"
-              size={48}
-            />
+            <BadgeCheck className="mt-1 shrink-0 text-green-sprout" size={48} />
             <h2 className="text-2xl font-extrabold leading-tight text-text-title">
               Encontre
               <br />

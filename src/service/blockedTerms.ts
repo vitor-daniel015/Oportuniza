@@ -409,4 +409,3 @@ export const blockedPhrases = [
   "prostituição infantil",
   "surdo-mudo",
 ] as const;
-

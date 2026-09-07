@@ -18,10 +18,15 @@ export interface MeuPerfil {
 }
 
 export async function getMeuPerfil(userId: string) {
-  const [{ data: perfil, error: perfilError }, { data: servicos, error: servicosError }] = await Promise.all([
+  const [
+    { data: perfil, error: perfilError },
+    { data: servicos, error: servicosError },
+  ] = await Promise.all([
     supabase
       .from("profiles")
-      .select("id, role, nome, cpf, email, whatsapp, cidade, bairro, estado, avatar_url, bio, cadastro_completo, onboarding_completo")
+      .select(
+        "id, role, nome, cpf, email, whatsapp, cidade, bairro, estado, avatar_url, bio, cadastro_completo, onboarding_completo",
+      )
       .eq("id", userId)
       .single(),
     supabase
@@ -53,13 +58,9 @@ export interface SaveProfileInput {
 }
 
 export async function saveMeuPerfil(input: SaveProfileInput) {
-  [
-    input.nome,
-    input.bio,
-    input.cidade,
-    input.bairro,
-    input.estado,
-  ].forEach(assertTextAllowed);
+  [input.nome, input.bio, input.cidade, input.bairro, input.estado].forEach(
+    assertTextAllowed,
+  );
   return supabase.rpc("save_my_profile", {
     p_nome: input.nome,
     p_cpf: input.cpf,
@@ -85,36 +86,68 @@ export interface MinhaAvaliacao {
   nota: number;
   comentario: string | null;
   created_at: string;
-  review_replies: { id: string; resposta_texto: string; created_at: string }[] | null;
+  review_replies:
+    | { id: string; resposta_texto: string; created_at: string }[]
+    | null;
 }
 
 export async function getMeuConteudo(userId: string) {
-  const [{ data: portfolio, error: portfolioError }, { data: reviews, error: reviewsError }] = await Promise.all([
-    supabase.from("portfolios").select("id, titulo, descricao, imagem_url").eq("prestador_id", userId).order("created_at", { ascending: false }),
-    supabase.from("reviews").select("id, nota, comentario, created_at, review_replies(id, resposta_texto, created_at)").eq("avaliado_id", userId).order("created_at", { ascending: false }),
+  const [
+    { data: portfolio, error: portfolioError },
+    { data: reviews, error: reviewsError },
+  ] = await Promise.all([
+    supabase
+      .from("portfolios")
+      .select("id, titulo, descricao, imagem_url")
+      .eq("prestador_id", userId)
+      .order("created_at", { ascending: false }),
+    supabase
+      .from("reviews")
+      .select(
+        "id, nota, comentario, created_at, review_replies(id, resposta_texto, created_at)",
+      )
+      .eq("avaliado_id", userId)
+      .order("created_at", { ascending: false }),
   ]);
 
   if (portfolioError) throw portfolioError;
   if (reviewsError) throw reviewsError;
-  return { portfolio: (portfolio ?? []) as MeuPortfolio[], reviews: (reviews ?? []) as MinhaAvaliacao[] };
+  return {
+    portfolio: (portfolio ?? []) as MeuPortfolio[],
+    reviews: (reviews ?? []) as MinhaAvaliacao[],
+  };
 }
 
-async function uploadMedia(userId: string, folder: "avatar" | "portfolio", file: File) {
-  if (!file.type.startsWith("image/")) throw new Error("Selecione um arquivo de imagem.");
-  if (file.size > 5 * 1024 * 1024) throw new Error("A imagem deve ter no máximo 5 MB.");
+async function uploadMedia(
+  userId: string,
+  folder: "avatar" | "portfolio",
+  file: File,
+) {
+  if (!file.type.startsWith("image/"))
+    throw new Error("Selecione um arquivo de imagem.");
+  if (file.size > 5 * 1024 * 1024)
+    throw new Error("A imagem deve ter no máximo 5 MB.");
 
   const extension = file.name.split(".").pop()?.toLowerCase() || "jpg";
   const path = `${userId}/${folder}/${crypto.randomUUID()}.${extension}`;
-  const { error } = await supabase.storage.from("profile-media").upload(path, file, { contentType: file.type });
+  const { error } = await supabase.storage
+    .from("profile-media")
+    .upload(path, file, { contentType: file.type });
   if (error) throw error;
-  return supabase.storage.from("profile-media").getPublicUrl(path).data.publicUrl;
+  return supabase.storage.from("profile-media").getPublicUrl(path).data
+    .publicUrl;
 }
 
 export function uploadAvatar(userId: string, file: File) {
   return uploadMedia(userId, "avatar", file);
 }
 
-export async function addPortfolio(userId: string, title: string, description: string, file: File) {
+export async function addPortfolio(
+  userId: string,
+  title: string,
+  description: string,
+  file: File,
+) {
   assertTextAllowed(title);
   assertTextAllowed(description);
   const imageUrl = await uploadMedia(userId, "portfolio", file);
@@ -140,15 +173,25 @@ export async function removePortfolio(id: string) {
 
   const marker = "/profile-media/";
   const imagePath = item.imagem_url?.split(marker)[1];
-  if (imagePath) await supabase.storage.from("profile-media").remove([decodeURIComponent(imagePath)]);
+  if (imagePath)
+    await supabase.storage
+      .from("profile-media")
+      .remove([decodeURIComponent(imagePath)]);
 }
 
-export async function saveReviewReply(reviewId: string, userId: string, text: string) {
+export async function saveReviewReply(
+  reviewId: string,
+  userId: string,
+  text: string,
+) {
   assertTextAllowed(text);
-  const { error } = await supabase.from("review_replies").upsert({
-    avaliacao_id: reviewId,
-    prestador_id: userId,
-    resposta_texto: text.trim(),
-  }, { onConflict: "avaliacao_id" });
+  const { error } = await supabase.from("review_replies").upsert(
+    {
+      avaliacao_id: reviewId,
+      prestador_id: userId,
+      resposta_texto: text.trim(),
+    },
+    { onConflict: "avaliacao_id" },
+  );
   if (error) throw error;
 }

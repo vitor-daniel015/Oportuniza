@@ -74,7 +74,11 @@ function AvatarCropModal({
       const croppedFile = await createCroppedAvatar(imageUrl, croppedArea);
       await onConfirm(croppedFile);
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : "Não foi possível recortar a foto.");
+      setError(
+        cause instanceof Error
+          ? cause.message
+          : "Não foi possível recortar a foto.",
+      );
       setProcessing(false);
     }
   }
@@ -89,14 +93,22 @@ function AvatarCropModal({
       >
         <header className="flex items-start justify-between gap-4 px-5 py-4 sm:px-7">
           <div>
-            <h2 id="crop-title" className="text-xl font-extrabold text-text-title sm:text-2xl">
+            <h2
+              id="crop-title"
+              className="text-xl font-extrabold text-text-title sm:text-2xl"
+            >
               Ajuste sua foto
             </h2>
             <p className="mt-1 text-sm text-text-secondary">
               Arraste a imagem e use o controle para aproximar ou afastar.
             </p>
           </div>
-          <button type="button" onClick={onCancel} aria-label="Cancelar recorte" className="shrink-0 rounded-full p-2 text-gray-600 hover:bg-gray-100">
+          <button
+            type="button"
+            onClick={onCancel}
+            aria-label="Cancelar recorte"
+            className="shrink-0 rounded-full p-2 text-gray-600 hover:bg-gray-100"
+          >
             <X size={24} />
           </button>
         </header>
@@ -122,7 +134,11 @@ function AvatarCropModal({
 
         <div className="px-5 py-5 sm:px-7">
           <label className="flex items-center gap-3">
-            <ZoomOut className="shrink-0 text-blue-depth" size={21} aria-hidden="true" />
+            <ZoomOut
+              className="shrink-0 text-blue-depth"
+              size={21}
+              aria-hidden="true"
+            />
             <span className="sr-only">Aproximação da foto</span>
             <input
               type="range"
@@ -134,21 +150,43 @@ function AvatarCropModal({
               className="w-full accent-blue-depth"
               aria-label="Aproximação da foto"
             />
-            <ZoomIn className="shrink-0 text-blue-depth" size={21} aria-hidden="true" />
+            <ZoomIn
+              className="shrink-0 text-blue-depth"
+              size={21}
+              aria-hidden="true"
+            />
           </label>
 
           <p className="mt-3 flex items-center gap-2 rounded-xl bg-blue-50 p-3 text-xs leading-relaxed text-blue-depth">
             <ImagePlus size={18} className="shrink-0" />
             Tudo que estiver dentro do círculo aparecerá na sua foto de perfil.
           </p>
-          {error && <p role="alert" className="mt-3 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
+          {error && (
+            <p
+              role="alert"
+              className="mt-3 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700"
+            >
+              {error}
+            </p>
+          )}
 
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
-            <button type="button" onClick={onCancel} disabled={processing} className="rounded-xl border border-gray-300 px-5 py-3 font-bold text-blue-depth disabled:opacity-50">
+            <button
+              type="button"
+              onClick={onCancel}
+              disabled={processing}
+              className="rounded-xl border border-gray-300 px-5 py-3 font-bold text-blue-depth disabled:opacity-50"
+            >
               Escolher outra foto
             </button>
-            <button type="button" onClick={() => void confirmCrop()} disabled={processing || !croppedArea} className="flex items-center justify-center gap-2 rounded-xl bg-linear-to-r from-blue-depth to-green-sprout px-5 py-3 font-bold text-white disabled:opacity-50">
-              <Check size={20} /> {processing ? "Salvando..." : "Usar esta foto"}
+            <button
+              type="button"
+              onClick={() => void confirmCrop()}
+              disabled={processing || !croppedArea}
+              className="flex items-center justify-center gap-2 rounded-xl bg-linear-to-r from-blue-depth to-green-sprout px-5 py-3 font-bold text-white disabled:opacity-50"
+            >
+              <Check size={20} />{" "}
+              {processing ? "Salvando..." : "Usar esta foto"}
             </button>
           </div>
         </div>
@@ -189,7 +227,8 @@ function loadBrowserImage(url: string) {
   return new Promise<HTMLImageElement>((resolve, reject) => {
     const image = new Image();
     image.onload = () => resolve(image);
-    image.onerror = () => reject(new Error("Não foi possível abrir essa imagem."));
+    image.onerror = () =>
+      reject(new Error("Não foi possível abrir essa imagem."));
     image.src = url;
   });
 }

@@ -24,7 +24,8 @@ export function Perfil() {
   const [reviewError, setReviewError] = useState("");
   const [reviewSaving, setReviewSaving] = useState(false);
   const [reloadKey, setReloadKey] = useState(0);
-  const [selectedPortfolio, setSelectedPortfolio] = useState<LightboxImage | null>(null);
+  const [selectedPortfolio, setSelectedPortfolio] =
+    useState<LightboxImage | null>(null);
 
   useEffect(() => {
     async function carregarPerfil() {
@@ -308,7 +309,10 @@ export function Perfil() {
           )}
         </section>
 
-        <PortfolioLightbox image={selectedPortfolio} onClose={() => setSelectedPortfolio(null)} />
+        <PortfolioLightbox
+          image={selectedPortfolio}
+          onClose={() => setSelectedPortfolio(null)}
+        />
 
         <section className="mt-12">
           <h2 className="text-2xl font-extrabold text-text-title md:text-3xl">

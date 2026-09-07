@@ -3,21 +3,19 @@ import type { PrestadorPublico } from "./PrestadoresPublicosService";
 import { assertTextAllowed } from "./ContentModerationService";
 
 export async function getPerfilPublico(prestadorId: string) {
-  const [perfilResult, portfolioResult, reviewsResult] =
-    await Promise.all([
-      supabase
-        .rpc("get_prestadores_publicos")
-        .eq("prestador_id", prestadorId),
+  const [perfilResult, portfolioResult, reviewsResult] = await Promise.all([
+    supabase.rpc("get_prestadores_publicos").eq("prestador_id", prestadorId),
 
-      supabase
-        .from("portfolios")
-        .select("*")
-        .eq("prestador_id", prestadorId)
-        .order("created_at", { ascending: false }),
+    supabase
+      .from("portfolios")
+      .select("*")
+      .eq("prestador_id", prestadorId)
+      .order("created_at", { ascending: false }),
 
-      supabase
-        .from("reviews")
-        .select(`
+    supabase
+      .from("reviews")
+      .select(
+        `
           id,
           nota,
           comentario,
@@ -28,10 +26,11 @@ export async function getPerfilPublico(prestadorId: string) {
             resposta_texto,
             created_at
           )
-        `)
-        .eq("avaliado_id", prestadorId)
-        .order("created_at", { ascending: false }),
-    ]);
+        `,
+      )
+      .eq("avaliado_id", prestadorId)
+      .order("created_at", { ascending: false }),
+  ]);
 
   if (perfilResult.error) throw perfilResult.error;
   if (portfolioResult.error) throw portfolioResult.error;
@@ -51,7 +50,11 @@ export async function getPerfilPublico(prestadorId: string) {
   };
 }
 
-export async function submitProviderReview(prestadorId: string, rating: number, comment: string) {
+export async function submitProviderReview(
+  prestadorId: string,
+  rating: number,
+  comment: string,
+) {
   assertTextAllowed(comment);
   return supabase.rpc("submit_provider_review", {
     p_prestador_id: prestadorId,

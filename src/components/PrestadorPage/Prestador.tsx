@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { MenuPrestador } from "./MenuPrestador";
 import { Stars } from "./Stars";
 import {
@@ -29,7 +29,9 @@ export function Prestador() {
   }, []);
 
   const profissionaisFiltrados = selectedCategory
-    ? prestadores.filter((item: PrestadorPublico) => item.specialty === selectedCategory)
+    ? prestadores.filter(
+        (item: PrestadorPublico) => item.specialty === selectedCategory,
+      )
     : prestadores;
 
   if (loading) {

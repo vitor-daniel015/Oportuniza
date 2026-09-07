@@ -1,11 +1,32 @@
-import { Camera, Eye, LogOut, MessageCircle, Pencil, Plus, Trash2, UserRound, } from "lucide-react";
+import {
+  Camera,
+  Eye,
+  LogOut,
+  MessageCircle,
+  Pencil,
+  Plus,
+  Trash2,
+  UserRound,
+} from "lucide-react";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { getCategories, type Category } from "../../service/CategoriesService";
 import { signOut } from "../../service/LoginService";
 import { applyPendingGoogleRole } from "../../service/LoginService";
-import { addPortfolio, getMeuConteudo, getMeuPerfil, removePortfolio, saveMeuPerfil, saveReviewReply, uploadAvatar, type MeuPerfil as PerfilData, type MeuPortfolio, type MinhaAvaliacao, type SaveProfileInput, } from "../../service/MeuPerfilService";
+import {
+  addPortfolio,
+  getMeuConteudo,
+  getMeuPerfil,
+  removePortfolio,
+  saveMeuPerfil,
+  saveReviewReply,
+  uploadAvatar,
+  type MeuPerfil as PerfilData,
+  type MeuPortfolio,
+  type MinhaAvaliacao,
+  type SaveProfileInput,
+} from "../../service/MeuPerfilService";
 import { Stars } from "../PrestadorPage/Stars";
 import { OnboardingModal } from "./OnboardingModal";
 import { AvatarCropInput } from "./AvatarCropInput";
