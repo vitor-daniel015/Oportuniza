@@ -101,9 +101,12 @@ export function MenuPrestador({
               key={categoria.id}
               type="button"
               onClick={() => setSelectedCategory(categoria.nome)}
-              className={
-                "shrink-0 whitespace-nowrap text-base font-bold text-white hover:opacity-80 transition-all duration-200 sm:text-2xl"
-              }
+              aria-pressed={selectedCategory === categoria.nome}
+              className={`shrink-0 whitespace-nowrap rounded-lg px-3 py-2 text-base font-bold transition-all duration-200 sm:text-2xl ${
+                selectedCategory === categoria.nome
+                  ? "bg-white text-blue-depth shadow-md"
+                  : "text-white hover:bg-white/15"
+              }`}
             >
               {categoria.nome}
             </button>
