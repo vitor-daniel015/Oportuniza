@@ -1,30 +1,34 @@
 import { useState, type FormEvent } from "react";
 import { Navigate, Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
-import { signIn } from "../../service/LoginService";
+import { getPostLoginPath, signIn } from "../../service/LoginService";
 import { InputField } from "../InputField";
 import Google from "../Google";
+import { useToast } from "../../contexts/ToastContext";
 
 export function SingIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const { session, loading: sessionLoading } = useAuth();
   const navigate = useNavigate();
+  const { notify } = useToast();
 
-  if (!sessionLoading && session) return <Navigate to="/meu-perfil" replace />;
+  if (!sessionLoading && session) return <Navigate to="/pos-login" replace />;
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setLoading(true);
-    setMessage("");
 
     const { error } = await signIn(email.trim(), password);
 
     setLoading(false);
-    if (error) return setMessage(error.message);
-    navigate("/meu-perfil", { replace: true });
+    if (error) return notify(error.message, "error");
+    try {
+      navigate(await getPostLoginPath(), { replace: true });
+    } catch {
+      navigate("/prestadores", { replace: true });
+    }
   }
 
   return (
@@ -82,15 +86,6 @@ export function SingIn() {
                 autoComplete="current-password"
                 placeholder="Digite sua senha"
               />
-
-              {message && (
-                <p
-                  role="alert"
-                  className="rounded-xl bg-blue-50 px-4 py-3 text-sm text-blue-depth"
-                >
-                  {message}
-                </p>
-              )}
 
               <button
                 type="submit"

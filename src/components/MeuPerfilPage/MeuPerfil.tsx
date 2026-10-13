@@ -1,22 +1,12 @@
-import {
-  Camera,
-  Eye,
-  LogOut,
-  Pencil,
-  Plus,
-  Trash2,
-  UserRound,
-} from "lucide-react";
+import { Camera, Pencil, Plus, Trash2, UserRound } from "lucide-react";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { getCategories, type Category } from "../../service/CategoriesService";
-import { signOut } from "../../service/LoginService";
 import { applyPendingGoogleRole } from "../../service/LoginService";
 import {
   addPortfolio,
   cleanupUnusedProfileMedia,
-  deleteMyAccount,
   getMeuConteudo,
   getMeuPerfil,
   removePortfolio,
@@ -38,6 +28,7 @@ import { ProfileModal } from "./ProfileModal";
 import { ReviewsSection } from "./ReviewsSection";
 import { PortfolioLightbox, type LightboxImage } from "../PortfolioLightbox";
 import { BackButton } from "../BackButton";
+import { useToast } from "../../contexts/ToastContext";
 
 const emptyForm: SaveProfileInput = {
   nome: "",
@@ -50,11 +41,12 @@ const emptyForm: SaveProfileInput = {
   bio: "",
   categoriaId: "",
   whatsappPublico: false,
+  cep: "",
 };
 
 export function MeuPerfil() {
   const { user, loading: authLoading } = useAuth();
-  const navigate = useNavigate();
+  const { notify } = useToast();
   const [perfil, setPerfil] = useState<PerfilData | null>(null);
   const [form, setForm] = useState(emptyForm);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -85,7 +77,7 @@ export function MeuPerfil() {
     setCategories(categoryData);
     setPortfolio(content.portfolio);
     setReviews(content.reviews);
-    setForm({
+    const serverForm: SaveProfileInput = {
       nome: p.nome ?? "",
       cpf: p.cpf ?? "",
       whatsapp: p.whatsapp ?? "",
@@ -96,7 +88,22 @@ export function MeuPerfil() {
       bio: p.bio ?? "",
       categoriaId: profileData.categoriaId,
       whatsappPublico: p.whatsapp_publico,
-    });
+      cep: "",
+    };
+    const draftKey = `oportuniza:onboarding-draft:${id}`;
+    try {
+      const stored = sessionStorage.getItem(draftKey);
+      const draft = stored
+        ? (JSON.parse(stored) as Partial<SaveProfileInput>)
+        : null;
+      setForm(
+        draft && !p.onboarding_completo
+          ? { ...serverForm, ...draft }
+          : serverForm,
+      );
+    } catch {
+      setForm(serverForm);
+    }
     // Remove sobras de uploads interrompidos sem tocar em arquivos referenciados.
     void cleanupUnusedProfileMedia(id, [
       p.avatar_url,
@@ -113,6 +120,30 @@ export function MeuPerfil() {
       .catch(() => setError("Não foi possível carregar seu perfil."))
       .finally(() => setLoading(false));
   }, [user]);
+
+  useEffect(() => {
+    function openSettings() {
+      if (window.location.hash === "#configuracoes") setEditOpen(true);
+    }
+    openSettings();
+    window.addEventListener("hashchange", openSettings);
+    return () => window.removeEventListener("hashchange", openSettings);
+  }, []);
+
+  useEffect(() => {
+    if (!user || loading || perfil?.onboarding_completo) return;
+    sessionStorage.setItem(
+      `oportuniza:onboarding-draft:${user.id}`,
+      JSON.stringify(form),
+    );
+  }, [form, loading, perfil?.onboarding_completo, user]);
+
+  useEffect(() => {
+    if (error) notify(error, "error");
+  }, [error, notify]);
+  useEffect(() => {
+    if (message) notify(message, "success");
+  }, [message, notify]);
 
   const rating = useMemo(
     () =>
@@ -134,6 +165,9 @@ export function MeuPerfil() {
         return false;
       }
       if (user) await loadData(user.id);
+      window.dispatchEvent(new Event("oportuniza:avatar-updated"));
+      if (result.data && user)
+        sessionStorage.removeItem(`oportuniza:onboarding-draft:${user.id}`);
       setMessage(
         result.data
           ? "Perfil atualizado e publicado."
@@ -199,6 +233,7 @@ export function MeuPerfil() {
       setPortfolioTitle("");
       setPortfolioDescription("");
       setPortfolioFile(null);
+      notify("Trabalho adicionado ao portfólio.", "success");
     } catch (cause) {
       setError(
         cause instanceof Error
@@ -214,6 +249,7 @@ export function MeuPerfil() {
     try {
       await removePortfolio(id);
       await loadData(user.id);
+      notify("Trabalho removido do portfólio.", "success");
     } catch {
       setError("Não foi possível remover o trabalho.");
     }
@@ -226,30 +262,10 @@ export function MeuPerfil() {
       await loadData(user.id);
       setReplyingTo(null);
       setReply("");
+      notify("Resposta publicada.", "success");
     } catch {
       setError("Não foi possível salvar sua resposta.");
     } finally {
-      setSaving(false);
-    }
-  }
-  async function logout() {
-    await signOut();
-    navigate("/", { replace: true });
-  }
-  async function deleteAccount() {
-    if (!user) return;
-    const confirmation = window.prompt(
-      "Esta ação apaga sua conta, perfil, portfólio e avaliações. Digite EXCLUIR para confirmar.",
-    );
-    if (confirmation !== "EXCLUIR") return;
-    try {
-      setSaving(true);
-      setError("");
-      await deleteMyAccount(user.id);
-      await signOut();
-      navigate("/", { replace: true });
-    } catch (cause) {
-      setError(cause instanceof Error ? cause.message : "Não foi possível excluir sua conta.");
       setSaving(false);
     }
   }
@@ -274,7 +290,7 @@ export function MeuPerfil() {
   const address = [form.bairro, form.cidade, form.estado]
     .filter(Boolean)
     .join(", ");
- 
+
   function WhatsAppIcon({ className = "" }: { className?: string }) {
     return (
       <svg viewBox="0 0 32 32" aria-hidden="true" className={className}>
@@ -287,20 +303,18 @@ export function MeuPerfil() {
   }
 
   return (
-    <main className="pb-12">
-      <section className="relative bg-linear-to-r from-blue-depth via-[#27737c] to-green-sprout text-white md:mt-14">
-        <div className="mx-auto max-w-7xl px-4 pt-7 sm:px-6 md:pt-14">
-          <BackButton label="Voltar à página anterior" />
-        </div>
-        <div className="mx-auto min-h-24 max-w-7xl px-6 md:flex md:min-h-64 md:items-center md:pl-80 lg:pl-96">
+    <main className="overflow-x-hidden pb-12">
+      <BackButton label="Voltar" />
+      <section className="relative min-h-105 bg-linear-to-r from-blue-depth via-[#27737c] to-green-sprout text-white md:mt-14 md:min-h-0">
+        <div className="mx-auto max-w-7xl px-6 md:flex md:min-h-64 md:items-center md:pl-80 lg:pl-96">
           <div className="hidden md:block">
-            <h1 className="text-5xl font-extrabold lg:text-6xl">{form.nome}</h1>
-            <p className="mt-1 text-3xl">
+            <h1 className="text-4xl font-extrabold lg:text-5xl">{form.nome}</h1>
+            <p className="mt-1 text-2xl">
               {specialty || (isProvider ? "Prestador" : "Contratante")}
             </p>
           </div>
         </div>
-        <div className="absolute left-1/2 top-full lg:top-1/2 grid h-44 w-44 -translate-x-1/2 -translate-y-1/2 place-items-center overflow-hidden rounded-full border-4 border-white bg-white shadow-xl md:left-[7%] md:h-60 md:w-60 md:translate-x-0">
+        <div className="group absolute left-1/2 top-30 grid h-44 w-44 -translate-x-1/2 place-items-center overflow-hidden rounded-full border-4 border-white bg-white shadow-xl md:left-[7%] md:top-1/2 md:h-60 md:w-60 md:translate-x-0 md:-translate-y-1/2">
           {form.avatarUrl ? (
             <img
               src={form.avatarUrl}
@@ -310,55 +324,31 @@ export function MeuPerfil() {
           ) : (
             <UserRound className="text-blue-depth/40" size={90} />
           )}
-        </div>
-      </section>
-
-      <div className="mx-auto max-w-7xl px-3 pt-28 sm:px-6 md:px-10 md:pt-16">
-        <div className="mb-6 text-center md:hidden">
-          <h1 className="mx-auto max-w-sm text-3xl font-extrabold leading-tight text-text-title min-[380px]:text-4xl">
-            {form.nome}
-          </h1>
-          <p className="mt-1 text-xl text-blue-depth min-[380px]:text-2xl">
-            {specialty || (isProvider ? "Prestador" : "Contratante")}
-          </p>
-        </div>
-        <div className="flex flex-wrap justify-between gap-4">
           <AvatarCropInput
-            className="inline-flex cursor-pointer items-center gap-2 rounded-full border bg-white px-5 py-2 font-bold text-blue-depth shadow-md"
+            className="absolute inset-x-0 bottom-0 flex h-12 cursor-pointer items-center justify-center bg-black/60 text-sm font-bold text-white opacity-100 transition md:inset-0 md:h-auto md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100"
             disabled={saving}
             onCroppedFile={(file) => changeAvatar(file)}
           >
-            <Camera size={18} /> Alterar foto
+            <span className="flex items-center gap-2">
+              <Camera size={19} /> Alterar foto
+            </span>
           </AvatarCropInput>
-          <div className="flex flex-wrap gap-3">
-            {isProvider && perfil.cadastro_completo && (
-              <Link
-                to={`/prestador/${perfil.id}`}
-                className="flex items-center gap-2 rounded-full border bg-white px-5 py-2 font-bold text-blue-depth shadow-md"
-              >
-                <Eye size={18} /> Ver perfil público
-              </Link>
-            )}
-            <button
-              onClick={logout}
-              className="flex items-center gap-2 rounded-full bg-red-600 px-5 py-2 font-bold text-white"
-            >
-              <LogOut size={18} /> Sair
-            </button>
-          </div>
         </div>
-        {(error || message) && (
-          <p
-            className={`mt-6 rounded-xl px-4 py-3 ${error ? "bg-red-50 text-red-700" : "bg-green-50 text-green-700"}`}
-          >
-            {error || message}
+        <div className="absolute inset-x-4 top-78 text-center md:hidden">
+          <h1 className="mx-auto max-w-sm text-3xl font-extrabold leading-tight">
+            {form.nome}
+          </h1>
+          <p className="mt-1 text-xl">
+            {specialty || (isProvider ? "Prestador" : "Contratante")}
           </p>
-        )}
+        </div>
+      </section>
 
+      <div className="mx-auto max-w-7xl px-3 pt-6 sm:px-6 md:px-10 md:pt-16">
         <section className="mt-8 grid gap-8 lg:grid-cols-2 lg:gap-14">
           <div className="space-y-7">
             <div>
-              <h2 className="text-3xl font-extrabold text-text-title">
+              <h2 className="text-2xl font-extrabold text-text-title">
                 Avaliação
               </h2>
               <div className="mt-2 flex w-fit items-center gap-3 rounded-full border bg-white px-4 py-2 shadow-md">
@@ -373,7 +363,7 @@ export function MeuPerfil() {
             </div>
             <div>
               <div className="flex items-center justify-between">
-                <h2 className="text-3xl font-extrabold text-text-title">
+                <h2 className="text-2xl font-extrabold text-text-title">
                   Endereço
                 </h2>
                 <EditButton onClick={() => setEditOpen(true)} />
@@ -385,7 +375,7 @@ export function MeuPerfil() {
           </div>
           <div>
             <div className="flex items-center justify-between">
-              <h2 className="text-3xl font-extrabold text-text-title">
+              <h2 className="text-2xl font-extrabold text-text-title">
                 Sobre mim
               </h2>
               <EditButton onClick={() => setEditOpen(true)} />
@@ -402,7 +392,7 @@ export function MeuPerfil() {
             href={`https://wa.me/${form.whatsapp.replace(/\D/g, "")}`}
             target="_blank"
             rel="noreferrer"
-            className="mt-9 flex w-full items-center justify-center gap-3 rounded-lg bg-green-sprout px-6 py-4 text-xl font-extrabold text-white md:text-3xl"
+            className="mt-9 flex w-full items-center justify-center gap-3 rounded-lg bg-green-sprout px-6 py-4 text-lg font-extrabold text-white md:text-2xl"
           >
             <WhatsAppIcon className="h-8 w-8" /> Enviar mensagem
           </a>
@@ -411,7 +401,7 @@ export function MeuPerfil() {
         {isProvider && (
           <section className="mt-12">
             <div className="flex items-center justify-between gap-3">
-              <h2 className="text-2xl font-extrabold text-text-title md:text-3xl">
+              <h2 className="text-2xl font-extrabold text-text-title">
                 Portfólio de trabalhos
               </h2>
               <button
@@ -467,16 +457,6 @@ export function MeuPerfil() {
             )}
           </section>
         )}
-        <section className="mt-12 rounded-2xl border border-red-200 bg-red-50 p-5">
-          <h2 className="text-xl font-extrabold text-red-800">Excluir minha conta</h2>
-          <p className="mt-2 text-sm leading-relaxed text-red-700">
-            Apaga definitivamente seu perfil, trabalhos, avaliações relacionadas e imagens enviadas.
-          </p>
-          <button type="button" onClick={deleteAccount} disabled={saving}
-            className="mt-4 flex items-center gap-2 rounded-xl bg-red-700 px-5 py-3 font-bold text-white disabled:opacity-60">
-            <Trash2 size={18} /> Excluir conta e meus dados
-          </button>
-        </section>
 
         {isProvider && (
           <ReviewsSection

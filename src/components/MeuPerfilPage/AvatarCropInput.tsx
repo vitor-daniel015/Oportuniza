@@ -1,5 +1,6 @@
 import { Check, ImagePlus, X, ZoomIn, ZoomOut } from "lucide-react";
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import Cropper, { type Area, type Point } from "react-easy-crop";
 
 export function AvatarCropInput({
@@ -14,12 +15,25 @@ export function AvatarCropInput({
   onCroppedFile: (file: File) => void | Promise<void>;
 }) {
   const [sourceFile, setSourceFile] = useState<File | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   return (
     <>
-      <label className={className}>
+      <label
+        className={className}
+        tabIndex={disabled ? -1 : 0}
+        role="button"
+        aria-label="Alterar foto de perfil"
+        onKeyDown={(event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            inputRef.current?.click();
+          }
+        }}
+      >
         {children}
         <input
+          ref={inputRef}
           type="file"
           accept="image/*"
           className="hidden"
@@ -30,16 +44,18 @@ export function AvatarCropInput({
           }}
         />
       </label>
-      {sourceFile && (
-        <AvatarCropModal
-          file={sourceFile}
-          onCancel={() => setSourceFile(null)}
-          onConfirm={async (croppedFile) => {
-            await onCroppedFile(croppedFile);
-            setSourceFile(null);
-          }}
-        />
-      )}
+      {sourceFile &&
+        createPortal(
+          <AvatarCropModal
+            file={sourceFile}
+            onCancel={() => setSourceFile(null)}
+            onConfirm={async (croppedFile) => {
+              await onCroppedFile(croppedFile);
+              setSourceFile(null);
+            }}
+          />,
+          document.body,
+        )}
     </>
   );
 }
@@ -84,12 +100,12 @@ function AvatarCropModal({
   }
 
   return (
-    <div className="fixed inset-0 z-90 flex items-center justify-center bg-[#101522]/80 p-3 backdrop-blur-sm sm:p-6">
+    <div className="fixed inset-0 z-120 flex items-center justify-center overflow-y-auto bg-[#101522]/80 p-3 backdrop-blur-sm sm:p-6">
       <section
         role="dialog"
         aria-modal="true"
         aria-labelledby="crop-title"
-        className="flex max-h-[calc(100dvh-1.5rem)] w-full max-w-2xl flex-col overflow-hidden rounded-3xl bg-white shadow-2xl"
+        className="my-auto flex max-h-[calc(100dvh-1.5rem)] w-full max-w-2xl flex-col overflow-hidden rounded-3xl bg-white shadow-2xl sm:max-h-[calc(100dvh-3rem)]"
       >
         <header className="flex items-start justify-between gap-4 px-5 py-4 sm:px-7">
           <div>
@@ -113,7 +129,7 @@ function AvatarCropModal({
           </button>
         </header>
 
-        <div className="relative h-[46dvh] min-h-64 w-full bg-[#172536] sm:h-105">
+        <div className="relative h-[42dvh] min-h-60 w-full shrink-0 bg-[#172536] sm:h-105">
           {imageUrl && (
             <Cropper
               image={imageUrl}
@@ -132,7 +148,7 @@ function AvatarCropModal({
           )}
         </div>
 
-        <div className="px-5 py-5 sm:px-7">
+        <div className="overflow-y-auto px-5 py-4 sm:px-7 sm:py-5">
           <label className="flex items-center gap-3">
             <ZoomOut
               className="shrink-0 text-blue-depth"

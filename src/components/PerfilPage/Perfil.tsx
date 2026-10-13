@@ -10,6 +10,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import { ReviewModal } from "./ReviewModal";
 import { PortfolioLightbox, type LightboxImage } from "../PortfolioLightbox";
 import { BackButton } from "../BackButton";
+import { recordProfileView } from "../../service/MetricsService";
 
 export function Perfil() {
   const { id } = useParams<{ id: string }>();
@@ -53,6 +54,10 @@ export function Perfil() {
 
     carregarPerfil();
   }, [id, reloadKey]);
+
+  useEffect(() => {
+    if (id && id !== user?.id) void recordProfileView(id);
+  }, [id, user?.id]);
 
   if (loading) {
     return (
@@ -169,10 +174,8 @@ export function Perfil() {
 
   return (
     <main className="pb-8">
+      <BackButton fallback="/prestadores" label="Voltar" />
       <section className="relative bg-linear-to-r from-blue-depth via-[#27737c] to-green-sprout text-white md:mt-14">
-        <div className="absolute left-4 top-4 z-10 md:left-8">
-          <BackButton fallback="/prestadores" label="Voltar" overlay />
-        </div>
         <div className="mx-auto min-h-24 max-w-7xl px-6 sm:px-10 md:flex md:min-h-64 md:items-center md:pl-80 lg:pl-96">
           <div className="hidden md:block">
             <h1 className="text-4xl font-extrabold leading-tight sm:text-5xl lg:text-6xl">
@@ -251,18 +254,19 @@ export function Perfil() {
               Sobre mim
             </h2>
             <div className="mt-2 min-h-36 rounded-3xl border border-gray-300 bg-white p-5 text-sm leading-relaxed text-text-body shadow-md md:text-base">
-              {descricao || "Este profissional ainda não adicionou uma descrição."}
+              {descricao ||
+                "Este profissional ainda não adicionou uma descrição."}
             </div>
           </div>
         </section>
         <a
-            href={`https://wa.me/${whatsappComPais}?text=${mensagemWhatsapp}`}
-            target="_blank"
-            rel="noreferrer"
-            className="mt-9 flex w-full items-center justify-center gap-3 rounded-lg bg-green-sprout px-6 py-4 text-xl font-extrabold text-white transition hover:brightness-105 md:text-3xl"
-          >
-            <WhatsAppIcon className="h-8 w-8" /> Enviar mensagem
-          </a>
+          href={`https://wa.me/${whatsappComPais}?text=${mensagemWhatsapp}`}
+          target="_blank"
+          rel="noreferrer"
+          className="mt-9 flex w-full items-center justify-center gap-3 rounded-lg bg-green-sprout px-6 py-4 text-xl font-extrabold text-white transition hover:brightness-105 md:text-3xl"
+        >
+          <WhatsAppIcon className="h-8 w-8" /> Enviar mensagem
+        </a>
 
         <section className="mt-12">
           <h2 className="text-2xl font-extrabold text-text-title md:text-3xl">

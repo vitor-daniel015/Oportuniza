@@ -58,6 +58,7 @@ export interface SaveProfileInput {
   bio: string;
   categoriaId: string;
   whatsappPublico: boolean;
+  cep: string;
 }
 
 export async function saveMeuPerfil(input: SaveProfileInput) {
@@ -165,7 +166,9 @@ export async function deleteMyAccount(userId: string) {
       .from("profile-media")
       .list(`${userId}/${folder}`, { limit: 100 });
     if (error) throw error;
-    const paths = (data ?? []).map((item) => `${userId}/${folder}/${item.name}`);
+    const paths = (data ?? []).map(
+      (item) => `${userId}/${folder}/${item.name}`,
+    );
     if (paths.length) {
       const { error: removeError } = await supabase.storage
         .from("profile-media")
@@ -194,7 +197,9 @@ export async function cleanupUnusedProfileMedia(
     }
   }
   if (unused.length) {
-    const { error } = await supabase.storage.from("profile-media").remove(unused);
+    const { error } = await supabase.storage
+      .from("profile-media")
+      .remove(unused);
     if (error) throw error;
   }
 }

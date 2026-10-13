@@ -8,21 +8,19 @@ type GoogleProps = {
   termsAccepted?: boolean;
 };
 
-const Google = ({ mode = "signin", role, termsAccepted = false }: GoogleProps) => {
+const Google = ({
+  mode = "signin",
+  role,
+  termsAccepted = false,
+}: GoogleProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [choiceOpen, setChoiceOpen] = useState(false);
-  const [acceptedInDialog, setAcceptedInDialog] = useState(false);
 
   async function continueWithGoogle(selectedRole?: UserRole, accepted = false) {
     setIsLoading(true);
     setErrorMessage("");
     try {
-      if (selectedRole && !accepted) {
-        setErrorMessage("Aceite os Termos de Uso e a Política de Privacidade para criar a conta.");
-        setIsLoading(false);
-        return;
-      }
       const { error } = await signInWithGoogle(selectedRole, accepted);
       if (error) setErrorMessage(error.message);
     } catch {
@@ -105,21 +103,17 @@ const Google = ({ mode = "signin", role, termsAccepted = false }: GoogleProps) =
             </p>
 
             <div className="mt-5 space-y-3">
-              <label className="flex items-start gap-3 rounded-xl bg-blue-50 p-4 text-sm leading-relaxed">
-                <input type="checkbox" checked={acceptedInDialog} onChange={(e)=>setAcceptedInDialog(e.target.checked)} className="mt-1 h-5 w-5 shrink-0 accent-[#49a75d]" />
-                <span>Para criar uma conta, aceito os <a href="/termos-de-uso" target="_blank" className="font-bold underline">Termos de Uso</a> e a <a href="/politica-de-privacidade" target="_blank" className="font-bold underline">Política de Privacidade</a>.</span>
-              </label>
               <ChoiceButton
                 icon={<UserRound size={25} />}
                 title="Quero contratar um serviço"
                 description="Vou procurar profissionais para realizar um trabalho."
-                onClick={() => void continueWithGoogle("contratante", acceptedInDialog)}
+                onClick={() => void continueWithGoogle("contratante")}
               />
               <ChoiceButton
                 icon={<BriefcaseBusiness size={25} />}
                 title="Quero oferecer meus serviços"
                 description="Sou profissional e quero divulgar meu trabalho para clientes."
-                onClick={() => void continueWithGoogle("prestador", acceptedInDialog)}
+                onClick={() => void continueWithGoogle("prestador")}
               />
               <button
                 type="button"

@@ -91,10 +91,17 @@ export function ProfileForm({
       )}
       {isProvider && (
         <label className="flex items-start gap-3 rounded-xl border border-gray-200 p-4 text-sm sm:col-span-2">
-          <input type="checkbox" checked={form.whatsappPublico}
-            onChange={(e) => setForm({ ...form, whatsappPublico: e.target.checked })}
-            className="mt-0.5 h-5 w-5 shrink-0 accent-[#49a75d]" />
-          <span><strong>Exibir meu WhatsApp no perfil público</strong></span>
+          <input
+            type="checkbox"
+            checked={form.whatsappPublico}
+            onChange={(e) =>
+              setForm({ ...form, whatsappPublico: e.target.checked })
+            }
+            className="mt-0.5 h-5 w-5 shrink-0 accent-[#49a75d]"
+          />
+          <span>
+            <strong>Exibir meu WhatsApp no perfil público</strong>
+          </span>
         </label>
       )}
 

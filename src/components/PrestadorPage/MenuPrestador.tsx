@@ -76,9 +76,6 @@ export function MenuPrestador({
             size={20}
           />
         </div>
-        <p className="mt-2 text-xs text-text-secondary">
-          Selecione uma opção para aplicar o filtro.
-        </p>
       </div>
 
       <nav className="hidden min-w-0 w-full items-center justify-between rounded-xl bg-linear-to-r from-blue-depth via-[#27737C] to-green-sprout px-10 sm:flex sm:h-full">

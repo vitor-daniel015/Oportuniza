@@ -15,6 +15,13 @@ import type { SaveProfileInput } from "../../service/MeuPerfilService";
 import { InputField } from "../InputField";
 import { AvatarCropInput } from "./AvatarCropInput";
 import type { ProfileFormSetter } from "./ProfileForm";
+import {
+  isValidCpf,
+  maskCep,
+  maskCpf,
+  maskPhone,
+  onlyDigits,
+} from "../../service/FormValidation";
 
 const steps = [
   { title: "Boas-vindas", icon: Rocket },
@@ -46,15 +53,21 @@ export function OnboardingModal({
   const [step, setStep] = useState(0);
   const [stepError, setStepError] = useState("");
   const [uploading, setUploading] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  const [searchingCep, setSearchingCep] = useState(false);
   const CurrentIcon = steps[step].icon;
 
   function validateCurrentStep() {
     if (step === 1) {
-      if (!cpfAlreadyRegistered && form.cpf.replace(/\D/g, "").length !== 11)
-        return "Digite um CPF com 11 números.";
+      if (!cpfAlreadyRegistered && !isValidCpf(form.cpf)) {
+        setFieldErrors({ cpf: "Digite um CPF válido." });
+        return "Revise o campo destacado.";
+      }
       const phoneLength = form.whatsapp.replace(/\D/g, "").length;
-      if (phoneLength < 10 || phoneLength > 13)
-        return "Digite um WhatsApp válido, incluindo o DDD.";
+      if (phoneLength < 10 || phoneLength > 11) {
+        setFieldErrors({ whatsapp: "Digite um telefone com DDD." });
+        return "Revise o campo destacado.";
+      }
     }
     if (step === 2) {
       if (!form.cidade.trim() || !form.bairro.trim())
@@ -77,7 +90,34 @@ export function OnboardingModal({
     const validationMessage = validateCurrentStep();
     if (validationMessage) return setStepError(validationMessage);
     setStepError("");
+    setFieldErrors({});
     setStep((current) => Math.min(current + 1, steps.length - 1));
+  }
+
+  async function searchCep() {
+    const cep = onlyDigits(form.cep);
+    if (cep.length !== 8)
+      return setFieldErrors({ cep: "Digite um CEP com 8 números." });
+    setSearchingCep(true);
+    setFieldErrors({});
+    try {
+      const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+      const data = await response.json();
+      if (!response.ok || data.erro) throw new Error();
+      setForm((current) => ({
+        ...current,
+        cep: maskCep(data.cep ?? cep),
+        bairro: data.bairro || current.bairro,
+        cidade: data.localidade || current.cidade,
+        estado: data.uf || current.estado,
+      }));
+    } catch {
+      setFieldErrors({
+        cep: "CEP não encontrado. Você pode preencher o endereço manualmente.",
+      });
+    } finally {
+      setSearchingCep(false);
+    }
   }
 
   async function selectAvatar(file?: File) {
@@ -156,11 +196,16 @@ export function OnboardingModal({
                   placeholder="000.000.000-00"
                   value={form.cpf}
                   onChange={(event) =>
-                    setForm({ ...form, cpf: event.target.value })
+                    setForm({ ...form, cpf: maskCpf(event.target.value) })
                   }
+                  maxLength={14}
                 />
+                {fieldErrors.cpf && <FieldError text={fieldErrors.cpf} />}
                 {cpfAlreadyRegistered && !form.cpf && (
-                  <p className="-mt-2 text-xs font-semibold text-green-700">CPF já protegido e cadastrado. Preencha somente se quiser substituí-lo.</p>
+                  <p className="-mt-2 text-xs font-semibold text-green-700">
+                    CPF já protegido e cadastrado. Preencha somente se quiser
+                    substituí-lo.
+                  </p>
                 )}
                 <InputField
                   id="onboarding-whatsapp"
@@ -169,18 +214,36 @@ export function OnboardingModal({
                   placeholder="(15) 99999-9999"
                   value={form.whatsapp}
                   onChange={(event) =>
-                    setForm({ ...form, whatsapp: event.target.value })
+                    setForm({
+                      ...form,
+                      whatsapp: maskPhone(event.target.value),
+                    })
                   }
+                  maxLength={15}
                 />
+                {fieldErrors.whatsapp && (
+                  <FieldError text={fieldErrors.whatsapp} />
+                )}
                 <p className="rounded-xl bg-blue-50 p-3 text-xs leading-relaxed text-blue-depth">
                   Seu número só aparecerá publicamente se você autorizar abaixo.
                 </p>
                 <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-gray-200 p-4 text-sm leading-relaxed">
-                  <input type="checkbox" checked={form.whatsappPublico}
-                    onChange={(event) => setForm({ ...form, whatsappPublico: event.target.checked })}
-                    className="mt-1 h-5 w-5 shrink-0 accent-[#49a75d]" />
-                  <span><strong>Autorizo exibir meu WhatsApp no perfil público.</strong><br />
-                    Assim, visitantes poderão abrir uma conversa comigo. Posso retirar esta autorização depois.</span>
+                  <input
+                    type="checkbox"
+                    checked={form.whatsappPublico}
+                    onChange={(event) =>
+                      setForm({
+                        ...form,
+                        whatsappPublico: event.target.checked,
+                      })
+                    }
+                    className="mt-1 h-5 w-5 shrink-0 accent-[#49a75d]"
+                  />
+                  <span>
+                    <strong>
+                      Autorizo exibir meu WhatsApp no perfil público.
+                    </strong>
+                  </span>
                 </label>
               </div>
             </section>
@@ -192,6 +255,27 @@ export function OnboardingModal({
                 description="Informe a região em que você atende. Isso ajuda os clientes a encontrar profissionais próximos."
               />
               <div className="mt-6 grid gap-4 sm:grid-cols-2">
+                <div className="sm:col-span-2">
+                  <InputField
+                    id="onboarding-cep"
+                    type="text"
+                    inputMode="numeric"
+                    label="CEP"
+                    placeholder="00000-000"
+                    value={form.cep}
+                    maxLength={9}
+                    onChange={(event) =>
+                      setForm({ ...form, cep: maskCep(event.target.value) })
+                    }
+                    onBlur={searchCep}
+                  />
+                  <p className="mt-1 ml-4 text-xs text-text-secondary">
+                    {searchingCep
+                      ? "Buscando endereço..."
+                      : "Ao sair do campo, preenchemos cidade, bairro e estado."}
+                  </p>
+                  {fieldErrors.cep && <FieldError text={fieldErrors.cep} />}
+                </div>
                 <InputField
                   id="onboarding-city"
                   type="text"
@@ -413,5 +497,13 @@ function StepHeading({
         {description}
       </p>
     </div>
+  );
+}
+
+function FieldError({ text }: { text: string }) {
+  return (
+    <p role="alert" className="ml-4 text-xs font-semibold text-red-700">
+      {text}
+    </p>
   );
 }

@@ -1,10 +1,10 @@
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { previousRouteKey } from "./RouteHistoryTracker";
 
 export function BackButton({
   fallback = "/",
   label = "Voltar",
-  overlay = false,
 }: {
   fallback?: string;
   label?: string;
@@ -13,22 +13,19 @@ export function BackButton({
   const navigate = useNavigate();
 
   function goBack() {
-    if (window.history.length > 1) navigate(-1);
-    else navigate(fallback);
+    navigate(sessionStorage.getItem(previousRouteKey) || fallback, {
+      replace: true,
+    });
   }
 
   return (
     <button
       type="button"
       onClick={goBack}
-      className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-bold shadow-md transition active:scale-95 ${
-        overlay
-          ? "border border-white/60 bg-white text-blue-depth hover:bg-blue-50"
-          : "border border-gray-200 bg-white text-blue-depth hover:border-blue-depth"
-      }`}
+      className="fixed left-3 top-3 z-80 inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white/95 px-4 py-2 text-sm font-bold text-blue-depth shadow-lg backdrop-blur transition hover:border-blue-depth hover:bg-blue-50 active:scale-95 sm:left-5 sm:top-5"
       aria-label={`${label}. Retornar à página anterior`}
     >
-      <ArrowLeft size={19} /> {label}
+      <ArrowLeft size={19} /> {label || "Voltar"}
     </button>
   );
 }

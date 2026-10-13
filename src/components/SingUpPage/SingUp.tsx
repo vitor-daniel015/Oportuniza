@@ -5,38 +5,40 @@ import { useAuth } from "../../contexts/AuthContext";
 import { signUp, type UserRole } from "../../service/LoginService";
 import { InputField } from "../InputField";
 import Google from "../Google";
+import { useToast } from "../../contexts/ToastContext";
 
 export function SingUp() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState<UserRole>("contratante");
-  const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
-  const [acceptedLegalTerms, setAcceptedLegalTerms] = useState(false);
   const { session, loading: sessionLoading } = useAuth();
   const navigate = useNavigate();
+  const { notify } = useToast();
 
-  if (!sessionLoading && session) return <Navigate to="/meu-perfil" replace />;
+  if (!sessionLoading && session) return <Navigate to="/pos-login" replace />;
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setLoading(true);
-    setMessage("");
 
     const { data, error } = await signUp(
       name.trim(),
       email.trim(),
       password,
       role,
-      acceptedLegalTerms,
+      false,
     );
 
     setLoading(false);
-    if (error) return setMessage(error.message);
+    if (error) return notify(error.message, "error");
     if (!data.session)
-      return setMessage("Conta criada! Confirme seu e-mail para entrar.");
-    navigate("/meu-perfil", { replace: true });
+      return notify(
+        "Conta criada! Confirme seu e-mail para entrar.",
+        "success",
+      );
+    navigate("/pos-login", { replace: true });
   }
 
   return (
@@ -136,15 +138,6 @@ export function SingUp() {
                 placeholder="Crie sua senha"
               />
 
-              {message && (
-                <p
-                  role="alert"
-                  className="rounded-xl bg-blue-50 px-4 py-3 text-sm text-blue-depth"
-                >
-                  {message}
-                </p>
-              )}
-
               <button
                 type="submit"
                 disabled={loading}
@@ -154,14 +147,7 @@ export function SingUp() {
               </button>
             </form>
 
-            <Google mode="signup" role={role} termsAccepted={acceptedLegalTerms} />
-
-              <label className="mt-3 flex items-start gap-3 rounded-xl bg-white p-4 text-sm leading-relaxed shadow-sm">
-                <input type="checkbox" required checked={acceptedLegalTerms}
-                  onChange={(e) => setAcceptedLegalTerms(e.target.checked)}
-                  className="mt-1 h-5 w-5 shrink-0 accent-[#49a75d]" />
-                <span>Li e aceito os <Link className="font-bold text-blue-depth underline" to="/termos-de-uso" target="_blank">Termos de Uso</Link> e a <Link className="font-bold text-blue-depth underline" to="/politica-de-privacidade" target="_blank">Política de Privacidade</Link>.</span>
-              </label>
+            <Google mode="signup" role={role} />
 
             <Link
               to="/entrar"

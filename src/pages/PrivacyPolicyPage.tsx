@@ -48,7 +48,7 @@ export function PrivacyPolicyPage() {
           Política de Privacidade
         </h1>
         <p className="mt-2 text-text-secondary">
-          Última atualização: 6 de setembro de 2026
+          Última atualização: 13 de outubro de 2026
         </p>
         <div className="mt-10 space-y-8">
           {sections.map(([title, text]) => (

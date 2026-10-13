@@ -12,6 +12,7 @@ export function InputField({
   id,
   type,
   placeholder,
+  className = "",
   ...inputProps
 }: InputFieldProps) {
   return (
@@ -29,13 +30,7 @@ export function InputField({
         id={id}
         placeholder={placeholder}
         {...inputProps}
-        className="rounded-full bg-[#dadada] px-5 py-3 outline-none transition-all focus:ring-2 focus:ring-blue-depth"
-        inputMode="text"
-        lang="pt-BR"
-        autoCapitalize="words"
-        autoCorrect="on"
-        spellCheck
-        autoComplete="address-level2"
+        className={`rounded-full bg-[#dadada] px-5 py-3 outline-none transition-all focus:ring-2 focus:ring-blue-depth ${className}`}
       />
     </div>
   );

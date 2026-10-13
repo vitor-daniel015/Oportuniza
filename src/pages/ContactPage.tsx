@@ -8,7 +8,7 @@ export function ContactPage() {
   return (
     <div className="min-h-screen color-background">
       <Navbar onAuthClick={() => navigate("/entrar")} />
-        <Contact />
+      <Contact />
       <Footer overlap />
     </div>
   );

@@ -6,6 +6,7 @@ import {
   getPrestadoresPublicos,
 } from "../../service/PrestadoresPublicosService";
 import { BackButton } from "../BackButton";
+import { recordProfessionalSearch } from "../../service/MetricsService";
 
 export function Prestador() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -45,12 +46,13 @@ export function Prestador() {
   }
   return (
     <div className="min-h-screen">
-      <div className="mx-auto max-w-7xl px-4 pt-7 sm:px-6 md:pt-14">
-        <BackButton label="Voltar à página anterior" />
-      </div>
+      <BackButton label="Voltar" />
       <MenuPrestador
         selectedCategory={selectedCategory}
-        setSelectedCategory={setSelectedCategory}
+        setSelectedCategory={(category) => {
+          setSelectedCategory(category);
+          if (category) void recordProfessionalSearch(category);
+        }}
       />
 
       <main className="max-w-7xl mx-auto px-4 pt-8 sm:px-6 sm:pt-12">

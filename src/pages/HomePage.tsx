@@ -10,9 +10,9 @@ export function HomePage() {
   return (
     <div className="min-h-screen bg-background">
       <Navbar onAuthClick={() => navigate("/entrar")} />
-        <Hero />
-        <Features />
-        <HowItWorks />
+      <Hero />
+      <Features />
+      <HowItWorks />
       <Footer />
     </div>
   );

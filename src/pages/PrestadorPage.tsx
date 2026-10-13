@@ -8,7 +8,7 @@ export function PrestadorPage() {
   return (
     <div className="min-h-screen color-background">
       <Navbar onAuthClick={() => navigate("/entrar")} />
-        <Prestador />
+      <Prestador />
       <Footer />
     </div>
   );
