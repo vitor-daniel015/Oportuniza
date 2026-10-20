@@ -79,6 +79,13 @@ export async function saveMeuPerfil(input: SaveProfileInput) {
   });
 }
 
+export async function updateMyAvatar(avatarUrl: string) {
+  const { error } = await supabase.rpc("update_my_avatar", {
+    p_avatar_url: avatarUrl,
+  });
+  if (error) throw error;
+}
+
 export interface MeuPortfolio {
   id: string;
   titulo: string;

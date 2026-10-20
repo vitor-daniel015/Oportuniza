@@ -23,18 +23,26 @@ import {
   onlyDigits,
 } from "../../service/FormValidation";
 
-const steps = [
-  { title: "Boas-vindas", icon: Rocket },
-  { title: "Seus dados", icon: UserRound },
-  { title: "Onde atende", icon: MapPin },
-  { title: "Seu trabalho", icon: BriefcaseBusiness },
-  { title: "Sua foto", icon: Camera },
-];
+const providerSteps = [
+  { id: "welcome", title: "Boas-vindas", icon: Rocket },
+  { id: "personal", title: "Seus dados", icon: UserRound },
+  { id: "location", title: "Onde atende", icon: MapPin },
+  { id: "work", title: "Seu trabalho", icon: BriefcaseBusiness },
+  { id: "photo", title: "Sua foto", icon: Camera },
+] as const;
+
+const contractorSteps = [
+  { id: "welcome", title: "Boas-vindas", icon: Rocket },
+  { id: "personal", title: "Seus dados", icon: UserRound },
+  { id: "location", title: "Onde você mora", icon: MapPin },
+  { id: "photo", title: "Sua foto", icon: Camera },
+] as const;
 
 export function OnboardingModal({
   form,
   setForm,
   categories,
+  isProvider,
   saving,
   error,
   onUploadAvatar,
@@ -44,6 +52,7 @@ export function OnboardingModal({
   form: SaveProfileInput;
   setForm: ProfileFormSetter;
   categories: Category[];
+  isProvider: boolean;
   saving: boolean;
   error: string;
   onUploadAvatar: (file: File) => Promise<string>;
@@ -55,10 +64,12 @@ export function OnboardingModal({
   const [uploading, setUploading] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [searchingCep, setSearchingCep] = useState(false);
+  const steps = isProvider ? providerSteps : contractorSteps;
+  const currentStep = steps[step].id;
   const CurrentIcon = steps[step].icon;
 
   function validateCurrentStep() {
-    if (step === 1) {
+    if (currentStep === "personal") {
       if (!cpfAlreadyRegistered && !isValidCpf(form.cpf)) {
         setFieldErrors({ cpf: "Digite um CPF válido." });
         return "Revise o campo destacado.";
@@ -69,19 +80,19 @@ export function OnboardingModal({
         return "Revise o campo destacado.";
       }
     }
-    if (step === 2) {
+    if (currentStep === "location") {
       if (!form.cidade.trim() || !form.bairro.trim())
         return "Informe sua cidade e seu bairro.";
       if (!/^[A-Z]{2}$/.test(form.estado.trim().toUpperCase()))
         return "Digite a sigla do estado com duas letras, por exemplo: SP.";
     }
-    if (step === 3) {
+    if (currentStep === "work") {
       if (!form.categoriaId)
         return "Escolha o tipo de serviço que você oferece.";
       if (!form.bio.trim())
         return "Conte um pouco sobre seu trabalho e sua experiência.";
     }
-    if (step === 4 && !form.avatarUrl)
+    if (currentStep === "photo" && isProvider && !form.avatarUrl)
       return "Adicione uma foto para que os clientes reconheçam você.";
     return "";
   }
@@ -100,10 +111,20 @@ export function OnboardingModal({
       return setFieldErrors({ cep: "Digite um CEP com 8 números." });
     setSearchingCep(true);
     setFieldErrors({});
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), 8000);
     try {
-      const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+      const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`, {
+        signal: controller.signal,
+      });
+      if (!response.ok) throw new Error("CEP_SERVICE_UNAVAILABLE");
       const data = await response.json();
-      if (!response.ok || data.erro) throw new Error();
+      if (data.erro) {
+        setFieldErrors({
+          cep: "CEP não encontrado. Confira os números ou preencha o endereço manualmente.",
+        });
+        return;
+      }
       setForm((current) => ({
         ...current,
         cep: maskCep(data.cep ?? cep),
@@ -113,9 +134,10 @@ export function OnboardingModal({
       }));
     } catch {
       setFieldErrors({
-        cep: "CEP não encontrado. Você pode preencher o endereço manualmente.",
+        cep: "Não foi possível consultar o CEP agora. Tente novamente ou preencha o endereço manualmente.",
       });
     } finally {
+      window.clearTimeout(timeout);
       setSearchingCep(false);
     }
   }
@@ -180,8 +202,10 @@ export function OnboardingModal({
         </div>
 
         <div className="p-5 sm:p-9">
-          {step === 0 && <WelcomeStep name={form.nome} />}
-          {step === 1 && (
+          {currentStep === "welcome" && (
+            <WelcomeStep name={form.nome} isProvider={isProvider} />
+          )}
+          {currentStep === "personal" && (
             <section>
               <StepHeading
                 title="Primeiro, seus dados pessoais"
@@ -248,11 +272,15 @@ export function OnboardingModal({
               </div>
             </section>
           )}
-          {step === 2 && (
+          {currentStep === "location" && (
             <section>
               <StepHeading
-                title="Onde você trabalha?"
-                description="Informe a região em que você atende. Isso ajuda os clientes a encontrar profissionais próximos."
+                title={isProvider ? "Onde você trabalha?" : "Onde você mora?"}
+                description={
+                  isProvider
+                    ? "Informe a região em que você atende. Isso ajuda os clientes a encontrar profissionais próximos."
+                    : "Informe sua região para encontrar profissionais que atendem perto de você."
+                }
               />
               <div className="mt-6 grid gap-4 sm:grid-cols-2">
                 <div className="sm:col-span-2">
@@ -315,7 +343,7 @@ export function OnboardingModal({
               </div>
             </section>
           )}
-          {step === 3 && (
+          {currentStep === "work" && (
             <section>
               <StepHeading
                 title="Conte sobre o seu trabalho"
@@ -358,11 +386,15 @@ export function OnboardingModal({
               </div>
             </section>
           )}
-          {step === 4 && (
+          {currentStep === "photo" && (
             <section>
               <StepHeading
                 title="Agora, adicione uma foto"
-                description="Use uma foto nítida do seu rosto. Isso transmite confiança e ajuda os clientes a reconhecer você."
+                description={
+                  isProvider
+                    ? "Use uma foto nítida do seu rosto. Isso transmite confiança e ajuda os clientes a reconhecer você."
+                    : "Se quiser, adicione uma foto para identificar sua conta. Para contratantes, esta etapa é opcional."
+                }
               />
               <div className="mt-6 flex flex-col items-center">
                 <div className="grid h-36 w-36 place-items-center overflow-hidden rounded-full border-4 border-white bg-gray-100 shadow-lg">
@@ -397,14 +429,14 @@ export function OnboardingModal({
                     className="mt-0.5 shrink-0 text-green-sprout"
                     size={21}
                   />{" "}
-                  Depois de concluir, seu perfil ficará visível para outras
-                  pessoas.
+                  {isProvider
+                    ? "Depois de concluir, seu perfil ficará visível para outras pessoas."
+                    : "Depois de concluir, sua conta estará pronta para encontrar profissionais."}
                 </p>
                 <p className="mt-2 text-sm leading-relaxed">
-                  Clientes poderão encontrar seu serviço, conhecer sua
-                  experiência, ver seus trabalhos e entrar em contato. Um perfil
-                  completo ajuda você a conquistar novas oportunidades e dar
-                  mais visibilidade à sua carreira.
+                  {isProvider
+                    ? "Clientes poderão encontrar seu serviço, conhecer sua experiência, ver seus trabalhos e entrar em contato. Um perfil completo ajuda você a conquistar novas oportunidades e dar mais visibilidade à sua carreira."
+                    : "Você poderá pesquisar profissionais da sua região, consultar seus serviços e entrar em contato com mais segurança."}
                 </p>
               </div>
             </section>
@@ -449,7 +481,11 @@ export function OnboardingModal({
                 className="flex items-center justify-center gap-2 rounded-xl bg-linear-to-r from-blue-depth to-green-sprout px-6 py-3 font-bold text-white disabled:opacity-60"
               >
                 <Save size={19} />{" "}
-                {saving ? "Publicando..." : "Concluir e publicar meu perfil"}
+                {saving
+                  ? "Salvando..."
+                  : isProvider
+                    ? "Concluir e publicar meu perfil"
+                    : "Concluir meu cadastro"}
               </button>
             )}
           </div>
@@ -459,23 +495,30 @@ export function OnboardingModal({
   );
 }
 
-function WelcomeStep({ name }: { name: string }) {
+function WelcomeStep({
+  name,
+  isProvider,
+}: {
+  name: string;
+  isProvider: boolean;
+}) {
   return (
     <section className="py-2 text-center">
       <span className="mx-auto grid h-20 w-20 place-items-center rounded-full bg-green-50 text-green-sprout">
         <Rocket size={40} />
       </span>
       <h3 className="mt-5 text-2xl font-extrabold text-text-title">
-        Olá, {name || "profissional"}!
+        Olá, {name || (isProvider ? "profissional" : "tudo bem")}!
       </h3>
       <p className="mx-auto mt-3 max-w-lg leading-relaxed text-text-secondary">
-        Vamos criar seu perfil profissional passo a passo. É rápido: você
-        informa seus dados, onde trabalha, qual serviço oferece e escolhe uma
-        foto.
+        {isProvider
+          ? "Vamos criar seu perfil profissional passo a passo. É rápido: você informa seus dados, onde trabalha, qual serviço oferece e escolhe uma foto."
+          : "Vamos completar sua conta passo a passo. Você informa seus dados e sua região para encontrar profissionais próximos com mais facilidade."}
       </p>
       <p className="mx-auto mt-4 max-w-lg rounded-2xl bg-blue-50 p-4 text-sm font-semibold leading-relaxed text-blue-depth">
-        Quando terminar, pessoas que precisam do seu serviço poderão encontrar
-        você no Oportuniza.
+        {isProvider
+          ? "Quando terminar, pessoas que precisam do seu serviço poderão encontrar você no Oportuniza."
+          : "Seu CPF ficará protegido e não será exibido para profissionais nem para outros usuários."}
       </p>
     </section>
   );

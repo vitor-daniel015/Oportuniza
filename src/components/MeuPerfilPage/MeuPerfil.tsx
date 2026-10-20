@@ -13,6 +13,7 @@ import {
   removeProfileMedia,
   saveMeuPerfil,
   saveReviewReply,
+  updateMyAvatar,
   uploadAvatar,
   type MeuPerfil as PerfilData,
   type MeuPortfolio,
@@ -210,23 +211,33 @@ export function MeuPerfil() {
   }
   async function changeAvatar(file?: File) {
     if (!file || !user) return;
+    let avatarUrl = "";
+    let persisted = false;
     try {
       setSaving(true);
-      const avatarUrl = await uploadAvatar(user.id, file);
+      setError("");
+      avatarUrl = await uploadAvatar(user.id, file);
       const previousAvatar = form.avatarUrl;
-      const next = { ...form, avatarUrl };
-      setForm(next);
-      const saved = await persist(next);
-      if (saved && previousAvatar && previousAvatar !== avatarUrl)
-        await removeProfileMedia(previousAvatar);
-      if (!saved) await removeProfileMedia(avatarUrl);
+      await updateMyAvatar(avatarUrl);
+      persisted = true;
+      setForm((current) => ({ ...current, avatarUrl }));
+      setPerfil((current) =>
+        current ? { ...current, avatar_url: avatarUrl } : current,
+      );
+      window.dispatchEvent(new Event("oportuniza:avatar-updated"));
+      setMessage("Foto de perfil atualizada.");
+      if (previousAvatar && previousAvatar !== avatarUrl)
+        await removeProfileMedia(previousAvatar).catch(() => {});
     } catch (cause) {
-      setSaving(false);
+      if (avatarUrl && !persisted)
+        await removeProfileMedia(avatarUrl).catch(() => {});
       setError(
         cause instanceof Error
           ? cause.message
           : "Não foi possível enviar a foto.",
       );
+    } finally {
+      setSaving(false);
     }
   }
   async function submitPortfolio(event: FormEvent) {
@@ -519,11 +530,12 @@ export function MeuPerfil() {
         image={selectedPortfolio}
         onClose={() => setSelectedPortfolio(null)}
       />
-      {isProvider && !perfil.onboarding_completo && (
+      {!perfil.onboarding_completo && (
         <OnboardingModal
           form={form}
           setForm={setForm}
           categories={categories}
+          isProvider={isProvider}
           saving={saving}
           error={error}
           onUploadAvatar={uploadOnboardingAvatar}
