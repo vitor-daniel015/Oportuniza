@@ -30,8 +30,10 @@ export function Hero() {
         </div>
         <div className="mx-auto aspect-square w-64 max-w-full overflow-hidden sm:h-92.5 sm:w-92.5">
           <img
-            src="/assets/oportuniza.png"
+            src="/assets/oportuniza.webp"
             alt="Símbolo Oportuniza"
+            fetchPriority="high"
+            decoding="async"
             className="h-auto w-full object-top"
           />
         </div>

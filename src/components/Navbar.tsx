@@ -193,7 +193,7 @@ export function Navbar({ onAuthClick }: NavbarProps) {
           className={`flex items-center justify-between md:block md:h-auto ${isGuest ? "h-34" : "h-full"}`}
         >
           <img
-            src="/assets/oportuniza-completo-branco.png"
+            src="/assets/oportuniza-completo-branco.webp"
             alt="Oportuniza"
             className="h-auto w-44 object-contain sm:w-58 md:h-24 md:w-auto"
           />
@@ -373,7 +373,7 @@ export function Navbar({ onAuthClick }: NavbarProps) {
           >
             <div className="flex items-center justify-between">
               <img
-                src="/assets/oportuniza-completo-branco.png"
+                src="/assets/oportuniza-completo-branco.webp"
                 alt="Oportuniza"
                 className="w-42"
               />

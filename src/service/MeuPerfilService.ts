@@ -128,19 +128,69 @@ async function uploadMedia(
   folder: "avatar" | "portfolio",
   file: File,
 ) {
-  if (!file.type.startsWith("image/"))
+  const allowedTypes = new Set([
+    "image/jpeg",
+    "image/png",
+    "image/webp",
+    "image/gif",
+  ]);
+  if (!allowedTypes.has(file.type))
     throw new Error("Selecione um arquivo de imagem.");
   if (file.size > 5 * 1024 * 1024)
     throw new Error("A imagem deve ter no máximo 5 MB.");
 
-  const extension = file.name.split(".").pop()?.toLowerCase() || "jpg";
+  const optimizedFile = await optimizeImageForUpload(file, folder);
+  const extension =
+    optimizedFile.name.split(".").pop()?.toLowerCase() || "webp";
   const path = `${userId}/${folder}/${crypto.randomUUID()}.${extension}`;
   const { error } = await supabase.storage
     .from("profile-media")
-    .upload(path, file, { contentType: file.type });
+    .upload(path, optimizedFile, {
+      contentType: optimizedFile.type,
+      cacheControl: "31536000",
+    });
   if (error) throw error;
   return supabase.storage.from("profile-media").getPublicUrl(path).data
     .publicUrl;
+}
+
+async function optimizeImageForUpload(
+  file: File,
+  folder: "avatar" | "portfolio",
+) {
+  if (file.type === "image/gif") return file;
+
+  const url = URL.createObjectURL(file);
+  try {
+    const image = await loadImage(url);
+    const maxDimension = folder === "avatar" ? 800 : 1600;
+    const scale = Math.min(1, maxDimension / Math.max(image.width, image.height));
+    const width = Math.max(1, Math.round(image.width * scale));
+    const height = Math.max(1, Math.round(image.height * scale));
+    const canvas = document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = height;
+    const context = canvas.getContext("2d");
+    if (!context) return file;
+    context.drawImage(image, 0, 0, width, height);
+    const blob = await new Promise<Blob | null>((resolve) =>
+      canvas.toBlob(resolve, "image/webp", 0.82),
+    );
+    if (!blob || blob.size >= file.size) return file;
+    const baseName = file.name.replace(/\.[^.]+$/, "") || "imagem";
+    return new File([blob], `${baseName}.webp`, { type: "image/webp" });
+  } finally {
+    URL.revokeObjectURL(url);
+  }
+}
+
+function loadImage(url: string) {
+  return new Promise<HTMLImageElement>((resolve, reject) => {
+    const image = new Image();
+    image.onload = () => resolve(image);
+    image.onerror = () => reject(new Error("Não foi possível preparar a imagem."));
+    image.src = url;
+  });
 }
 
 export function uploadAvatar(userId: string, file: File) {

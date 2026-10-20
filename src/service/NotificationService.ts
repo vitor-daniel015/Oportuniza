@@ -9,12 +9,11 @@ export interface AppNotification {
 }
 
 export async function saveNotification(message: string, kind = "success") {
-  const { data } = await supabase.auth.getUser();
-  if (!data.user) return;
-  await supabase.from("notifications").insert({
-    user_id: data.user.id,
-    message: message.slice(0, 240),
-    kind,
+  const { data } = await supabase.auth.getSession();
+  if (!data.session) return;
+  await supabase.rpc("add_my_notification", {
+    p_message: message.slice(0, 240),
+    p_kind: kind,
   });
   window.dispatchEvent(new Event("oportuniza:notifications-updated"));
 }

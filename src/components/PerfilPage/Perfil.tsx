@@ -143,7 +143,7 @@ export function Perfil() {
           </div>
         </div>
         <img
-          src={dados.perfil.avatar_url || "/assets/oportuniza.png"}
+          src={dados.perfil.avatar_url || "/assets/oportuniza.webp"}
           alt={dados.perfil.nome}
           className="absolute left-1/2 top-full lg:top-1/2 h-44 w-44 -translate-x-1/2 -translate-y-1/2 rounded-full border-4 border-white object-cover shadow-xl md:left-[7%] md:h-60 md:w-60 md:translate-x-0 lg:h-68 lg:w-68"
         />
@@ -233,6 +233,8 @@ export function Perfil() {
                     <img
                       src={item.imagem_url}
                       alt={item.titulo}
+                      loading="lazy"
+                      decoding="async"
                       className="h-52 w-full object-cover transition duration-300 group-hover:scale-105 sm:h-72 md:h-80"
                     />
                   </button>

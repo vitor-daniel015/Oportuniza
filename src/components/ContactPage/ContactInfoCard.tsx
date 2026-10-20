@@ -20,6 +20,8 @@ export function ContactInfoCard({
           <img
             src={imageSrc}
             alt="Logo da Oportuniza"
+            loading="lazy"
+            decoding="async"
             className="h-10 w-10 object-contain brightness-0 invert sm:h-15 sm:w-15 lg:h-20 lg:w-20"
           />
         ) : (

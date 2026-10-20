@@ -40,8 +40,10 @@ export function Footer({ overlap = false }: { overlap?: boolean }) {
     >
       <div className="mx-auto max-w-7xl px-5 pb-7 pt-12 sm:px-12 lg:px-10 lg:pt-16">
         <img
-          src="/assets/oportuniza-completo-branco.png"
+          src="/assets/oportuniza-completo-branco.webp"
           alt="Oportuniza"
+          loading="lazy"
+          decoding="async"
           className="mx-auto h-auto w-68.5 lg:mx-0 lg:h-24 lg:w-auto"
         />
 
@@ -60,8 +62,10 @@ export function Footer({ overlap = false }: { overlap?: boolean }) {
           </div>
 
           <img
-            src="/assets/footer-art.png"
+            src="/assets/footer-art.webp"
             alt="Arte institucional Oportuniza"
+            loading="lazy"
+            decoding="async"
             className="order-2 mx-auto hidden w-full max-w-110 lg:block"
           />
 

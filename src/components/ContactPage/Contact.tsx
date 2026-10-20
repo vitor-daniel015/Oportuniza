@@ -17,7 +17,7 @@ const contactInfos: ContactInfo[] = [
     id: "sobre",
     title: "Sobre Nós",
     description: "Oportuniza®",
-    imageSrc: "/assets/oportuniza.png",
+    imageSrc: "/assets/oportuniza.webp",
   },
   {
     id: "telefone",

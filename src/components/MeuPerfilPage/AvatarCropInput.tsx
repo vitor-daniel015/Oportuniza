@@ -35,7 +35,7 @@ export function AvatarCropInput({
         <input
           ref={inputRef}
           type="file"
-          accept="image/*"
+          accept="image/jpeg,image/png,image/webp,image/gif"
           className="hidden"
           disabled={disabled}
           onChange={(event) => {

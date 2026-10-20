@@ -47,7 +47,7 @@ export function SingIn() {
             className="absolute top-6 right-6 lg:top-10 lg:right-10"
           >
             <img
-              src="/assets/oportuniza-completo-branco.png"
+              src="/assets/oportuniza-completo-branco.webp"
               alt="Oportuniza"
               className="w-36 lg:w-44"
             />
@@ -55,7 +55,9 @@ export function SingIn() {
 
           <div className="relative mx-auto my-auto grid h-44 w-full place-items-center lg:h-96">
             <img
-              src="/assets/pessoa.png"
+              src="/assets/pessoa.webp"
+              loading="lazy"
+              decoding="async"
               alt="Pessoa trabalhando no notebook"
               className="h-full w-auto object-contain drop-shadow-2xl lg:max-h-96"
             ></img>

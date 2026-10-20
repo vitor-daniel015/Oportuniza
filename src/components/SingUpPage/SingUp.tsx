@@ -47,7 +47,7 @@ export function SingUp() {
         <aside className="relative flex min-h-77.7 flex-col overflow-hidden bg-[#215985] px-7 py-7 text-white lg:order-1 lg:min-h-full lg:w-[47%] lg:px-12 lg:py-10 lg:[clip-path:polygon(0_0,100%_0,82%_100%,0_100%)]">
           <Link to="/" aria-label="Voltar para o início">
             <img
-              src="/assets/oportuniza-completo-branco.png"
+              src="/assets/oportuniza-completo-branco.webp"
               alt="Oportuniza"
               className="w-36 lg:w-44"
             />
@@ -55,7 +55,9 @@ export function SingUp() {
 
           <div className="relative mx-auto my-auto grid h-44 w-full place-items-center lg:h-96">
             <img
-              src="/assets/pessoa.png"
+              src="/assets/pessoa.webp"
+              loading="lazy"
+              decoding="async"
               alt="Pessoa trabalhando no notebook"
               className="h-full w-auto object-contain drop-shadow-2xl lg:max-h-96"
             ></img>

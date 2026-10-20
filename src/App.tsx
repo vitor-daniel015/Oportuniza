@@ -1,21 +1,43 @@
+import { lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { HomePage } from "./pages/HomePage";
-import { ContactPage } from "./pages/ContactPage";
-import PrestadorPage from "./pages/PrestadorPage";
-import { SingInPage } from "./pages/SingInPage";
-import { SingUpPage } from "./pages/SingUpPage";
 import { AuthProvider } from "./contexts/AuthContext";
-import { PerfilPage } from "./pages/PerfilPage";
-import { MeuPerfilPage } from "./pages/MeuPerfilPage";
-import { PrivacyPolicyPage } from "./pages/PrivacyPolicyPage";
-import { TermsPage } from "./pages/TermsPage";
-import { PostLoginPage } from "./pages/PostLoginPage";
 import { LegalConsentGate } from "./components/LegalConsentGate";
 import { RouteHistoryTracker } from "./components/RouteHistoryTracker";
 import { ToastProvider } from "./contexts/ToastContext";
-import { MetricsPage } from "./pages/MetricsPage";
-import { NotificationsPage } from "./pages/NotificationsPage";
-import { InvitedReviewPage } from "./pages/InvitedReviewPage";
+
+const HomePage = lazy(() => import("./pages/HomePage"));
+const ContactPage = lazy(() => import("./pages/ContactPage"));
+const PrestadorPage = lazy(() => import("./pages/PrestadorPage"));
+const SingInPage = lazy(() =>
+  import("./pages/SingInPage").then((module) => ({ default: module.SingInPage })),
+);
+const SingUpPage = lazy(() =>
+  import("./pages/SingUpPage").then((module) => ({ default: module.SingUpPage })),
+);
+const PerfilPage = lazy(() =>
+  import("./pages/PerfilPage").then((module) => ({ default: module.PerfilPage })),
+);
+const MeuPerfilPage = lazy(() =>
+  import("./pages/MeuPerfilPage").then((module) => ({ default: module.MeuPerfilPage })),
+);
+const PrivacyPolicyPage = lazy(() =>
+  import("./pages/PrivacyPolicyPage").then((module) => ({ default: module.PrivacyPolicyPage })),
+);
+const TermsPage = lazy(() =>
+  import("./pages/TermsPage").then((module) => ({ default: module.TermsPage })),
+);
+const PostLoginPage = lazy(() =>
+  import("./pages/PostLoginPage").then((module) => ({ default: module.PostLoginPage })),
+);
+const MetricsPage = lazy(() =>
+  import("./pages/MetricsPage").then((module) => ({ default: module.MetricsPage })),
+);
+const NotificationsPage = lazy(() =>
+  import("./pages/NotificationsPage").then((module) => ({ default: module.NotificationsPage })),
+);
+const InvitedReviewPage = lazy(() =>
+  import("./pages/InvitedReviewPage").then((module) => ({ default: module.InvitedReviewPage })),
+);
 
 export default function App() {
   return (
@@ -24,6 +46,13 @@ export default function App() {
         <BrowserRouter>
           <RouteHistoryTracker />
           <LegalConsentGate />
+          <Suspense
+            fallback={
+              <main className="grid min-h-[55vh] place-items-center text-text-secondary">
+                Carregando página...
+              </main>
+            }
+          >
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/contato" element={<ContactPage />} />
@@ -44,6 +73,7 @@ export default function App() {
             />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
+          </Suspense>
         </BrowserRouter>
       </ToastProvider>
     </AuthProvider>

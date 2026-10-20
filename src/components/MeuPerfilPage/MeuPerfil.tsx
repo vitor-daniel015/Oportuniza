@@ -442,6 +442,8 @@ export function MeuPerfil() {
                       <img
                         src={item.imagem_url}
                         alt={item.titulo}
+                        loading="lazy"
+                        decoding="async"
                         className="h-52 w-full object-cover transition duration-300 group-hover:scale-105 sm:h-80"
                       />
                     </button>

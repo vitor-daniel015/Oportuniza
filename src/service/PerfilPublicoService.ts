@@ -19,7 +19,6 @@ export async function getPerfilPublico(prestadorId: string) {
           nota,
           comentario,
           created_at,
-          autor_id,
           review_replies (
             id,
             resposta_texto,
