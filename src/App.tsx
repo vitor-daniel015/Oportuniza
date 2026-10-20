@@ -14,6 +14,8 @@ import { LegalConsentGate } from "./components/LegalConsentGate";
 import { RouteHistoryTracker } from "./components/RouteHistoryTracker";
 import { ToastProvider } from "./contexts/ToastContext";
 import { MetricsPage } from "./pages/MetricsPage";
+import { NotificationsPage } from "./pages/NotificationsPage";
+import { InvitedReviewPage } from "./pages/InvitedReviewPage";
 
 export default function App() {
   return (
@@ -30,6 +32,8 @@ export default function App() {
             <Route path="/prestador/:id" element={<PerfilPage />} />
             <Route path="/meu-perfil" element={<MeuPerfilPage />} />
             <Route path="/metricas" element={<MetricsPage />} />
+            <Route path="/notificacoes" element={<NotificationsPage />} />
+            <Route path="/avaliar/:token" element={<InvitedReviewPage />} />
             <Route path="/entrar" element={<SingInPage />} />
             <Route path="/cadastrar" element={<SingUpPage />} />
             <Route path="/pos-login" element={<PostLoginPage />} />

@@ -156,6 +156,15 @@ export function Navbar({ onAuthClick }: NavbarProps) {
     setIsMobileAccountExpanded(false);
   }
 
+  function openProfileSettings() {
+    setIsAccountOpen(false);
+    closeMenu();
+    window.setTimeout(
+      () => window.dispatchEvent(new Event("oportuniza:open-profile-settings")),
+      0,
+    );
+  }
+
   const navigationLinks =
     accountRole === "prestador"
       ? [
@@ -171,7 +180,9 @@ export function Navbar({ onAuthClick }: NavbarProps) {
         ]
       : user && accountRole === null
         ? [links[0], links[3]]
-        : links;
+        : user
+          ? links
+          : links.filter((link) => link.href !== "/prestadores");
 
   return (
     <>
@@ -299,7 +310,7 @@ export function Navbar({ onAuthClick }: NavbarProps) {
                     icon={<Settings size={19} />}
                     title="Configurações"
                     description="Dados, privacidade e perfil"
-                    onClick={() => setIsAccountOpen(false)}
+                    onClick={openProfileSettings}
                   />
                   {canViewPublicProfile && (
                     <AccountLink
@@ -310,16 +321,13 @@ export function Navbar({ onAuthClick }: NavbarProps) {
                       onClick={() => setIsAccountOpen(false)}
                     />
                   )}
-                  <div
-                    className="flex items-start gap-3 rounded-xl px-3 py-3 text-gray-400"
-                    aria-disabled="true"
-                  >
-                    <Bell size={19} />
-                    <span>
-                      <strong className="block text-sm">Notificações</strong>
-                      <span className="text-xs">Disponível em breve</span>
-                    </span>
-                  </div>
+                  <AccountLink
+                    to="/notificacoes"
+                    icon={<Bell size={19} />}
+                    title="Notificações"
+                    description="Veja alterações e novidades"
+                    onClick={() => setIsAccountOpen(false)}
+                  />
                   <hr className="my-1 border-gray-100" />
                   <button
                     role="menuitem"
@@ -443,7 +451,7 @@ export function Navbar({ onAuthClick }: NavbarProps) {
                 </Link>
                 <Link
                   to="/meu-perfil#configuracoes"
-                  onClick={closeMenu}
+                  onClick={openProfileSettings}
                   className="flex items-start gap-3 rounded-xl px-3 py-3 text-white transition active:bg-white/20"
                 >
                   <Settings className="mt-0.5 shrink-0" size={21} />
@@ -471,18 +479,19 @@ export function Navbar({ onAuthClick }: NavbarProps) {
                     </span>
                   </Link>
                 )}
-                <div
-                  className="flex items-start gap-3 rounded-xl px-3 py-3 text-white/55"
-                  aria-disabled="true"
+                <Link
+                  to="/notificacoes"
+                  onClick={closeMenu}
+                  className="flex items-start gap-3 rounded-xl px-3 py-3 text-white transition active:bg-white/20"
                 >
                   <Bell className="mt-0.5 shrink-0" size={21} />
                   <span>
                     <strong className="block text-sm">Notificações</strong>
-                    <span className="block text-xs font-normal">
-                      Disponível em breve
+                    <span className="block text-xs font-normal text-white/80">
+                      Veja alterações e novidades
                     </span>
                   </span>
-                </div>
+                </Link>
 
                 <div className="mt-2 space-y-2 border-t border-white/25 pt-3">
                   <button

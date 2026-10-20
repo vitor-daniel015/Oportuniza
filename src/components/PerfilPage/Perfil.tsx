@@ -1,13 +1,9 @@
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { MapPin, Quote } from "lucide-react";
-import {
-  getPerfilPublico,
-  submitProviderReview,
-} from "../../service/PerfilPublicoService";
+import { getPerfilPublico } from "../../service/PerfilPublicoService";
 import { Stars } from "../PrestadorPage/Stars";
 import { useAuth } from "../../contexts/AuthContext";
-import { ReviewModal } from "./ReviewModal";
 import { PortfolioLightbox, type LightboxImage } from "../PortfolioLightbox";
 import { BackButton } from "../BackButton";
 import { recordProfileView } from "../../service/MetricsService";
@@ -19,12 +15,6 @@ export function Perfil() {
     useState<Awaited<ReturnType<typeof getPerfilPublico>>>(null);
   const [loading, setLoading] = useState(true);
   const [erro, setErro] = useState("");
-  const [reviewOpen, setReviewOpen] = useState(false);
-  const [reviewRating, setReviewRating] = useState(0);
-  const [reviewComment, setReviewComment] = useState("");
-  const [reviewError, setReviewError] = useState("");
-  const [reviewSaving, setReviewSaving] = useState(false);
-  const [reloadKey, setReloadKey] = useState(0);
   const [selectedPortfolio, setSelectedPortfolio] =
     useState<LightboxImage | null>(null);
 
@@ -53,7 +43,7 @@ export function Perfil() {
     }
 
     carregarPerfil();
-  }, [id, reloadKey]);
+  }, [id]);
 
   useEffect(() => {
     if (id && id !== user?.id) void recordProfileView(id);
@@ -127,40 +117,6 @@ export function Perfil() {
     }).format(new Date(data));
   }
 
-  async function handleReview(event: FormEvent) {
-    event.preventDefault();
-    if (!id || reviewRating === 0) {
-      setReviewError("Escolha uma nota de 1 a 5 estrelas.");
-      return;
-    }
-
-    setReviewSaving(true);
-    setReviewError("");
-    try {
-      const { error } = await submitProviderReview(
-        id,
-        reviewRating,
-        reviewComment,
-      );
-      if (error) {
-        setReviewError(error.message);
-        return;
-      }
-      setReviewOpen(false);
-      setReviewRating(0);
-      setReviewComment("");
-      setReloadKey((current) => current + 1);
-    } catch (cause) {
-      setReviewError(
-        cause instanceof Error
-          ? cause.message
-          : "Não foi possível validar o comentário.",
-      );
-    } finally {
-      setReviewSaving(false);
-    }
-  }
-
   function WhatsAppIcon({ className = "" }: { className?: string }) {
     return (
       <svg viewBox="0 0 32 32" aria-hidden="true" className={className}>
@@ -220,22 +176,11 @@ export function Perfil() {
                   {quantidadeAvaliacoes === 1 ? "avaliação" : "avaliações"}
                 </strong>
               </div>
-              {user && user.id !== dados.perfil.prestador_id ? (
-                <button
-                  type="button"
-                  onClick={() => setReviewOpen(true)}
-                  className="mt-4 rounded-full bg-blue-depth px-5 py-2 font-bold text-white transition hover:bg-green-sprout"
-                >
-                  Avaliar profissional
-                </button>
-              ) : !user ? (
-                <Link
-                  to="/entrar"
-                  className="mt-4 inline-block rounded-full border border-blue-depth px-5 py-2 font-bold text-blue-depth"
-                >
-                  Entre para avaliar
-                </Link>
-              ) : null}
+              {user?.id !== dados.perfil.prestador_id && (
+                <p className="mt-3 max-w-md text-sm text-text-secondary">
+                  Avaliações são liberadas por um convite individual enviado pelo profissional após a realização do serviço.
+                </p>
+              )}
             </div>
 
             <div>
@@ -378,18 +323,6 @@ export function Perfil() {
         </section>
       </div>
 
-      <ReviewModal
-        open={reviewOpen}
-        professionalName={dados.perfil.nome}
-        rating={reviewRating}
-        comment={reviewComment}
-        error={reviewError}
-        saving={reviewSaving}
-        onClose={() => setReviewOpen(false)}
-        onRatingChange={setReviewRating}
-        onCommentChange={setReviewComment}
-        onSubmit={handleReview}
-      />
     </main>
   );
 }

@@ -5,6 +5,7 @@ import { getPostLoginPath, signIn } from "../../service/LoginService";
 import { InputField } from "../InputField";
 import Google from "../Google";
 import { useToast } from "../../contexts/ToastContext";
+import { postLoginRedirectKey } from "../../service/ReviewInvitationService";
 
 export function SingIn() {
   const [email, setEmail] = useState("");
@@ -25,7 +26,11 @@ export function SingIn() {
     setLoading(false);
     if (error) return notify(error.message, "error");
     try {
-      navigate(await getPostLoginPath(), { replace: true });
+      const redirect = sessionStorage.getItem(postLoginRedirectKey);
+      if (redirect) {
+        sessionStorage.removeItem(postLoginRedirectKey);
+        navigate(redirect, { replace: true });
+      } else navigate(await getPostLoginPath(), { replace: true });
     } catch {
       navigate("/prestadores", { replace: true });
     }

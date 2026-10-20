@@ -1,23 +1,35 @@
 import { LucideIcon } from "lucide-react";
 
 interface ContactInfoCardProps {
-  icon: LucideIcon;
+  icon?: LucideIcon;
+  imageSrc?: string;
   title: string;
   description?: string;
 }
 
 export function ContactInfoCard({
   icon: Icon,
+  imageSrc,
   title,
   description,
 }: ContactInfoCardProps) {
   return (
     <div className="flex min-w-0 flex-col items-center px-0.5 sm:px-2">
       <div className="mb-3 flex h-16 w-16 items-center justify-center rounded-full bg-blue-depth shadow-lg sm:mb-4 sm:h-24 sm:w-24 lg:h-32 lg:w-32">
-        <Icon
-          className="h-7 w-7 text-white sm:h-10 sm:w-10"
-          strokeWidth={1.5}
-        />
+        {imageSrc ? (
+          <img
+            src={imageSrc}
+            alt="Logo da Oportuniza"
+            className="h-10 w-10 object-contain brightness-0 invert sm:h-15 sm:w-15 lg:h-20 lg:w-20"
+          />
+        ) : (
+          Icon && (
+            <Icon
+              className="h-7 w-7 text-white sm:h-10 sm:w-10"
+              strokeWidth={1.5}
+            />
+          )
+        )}
       </div>
       <h3 className="text-[9px] font-bold uppercase sm:text-sm lg:text-lg">
         {title}

@@ -1,25 +1,25 @@
-import { CheckCircle, Search, Zap } from "lucide-react";
+import { CheckCircle, Search, UserRoundPlus } from "lucide-react";
 
 const steps = [
   {
     id: 1,
-    title: "Encontre Profissionais",
+    title: "Crie sua conta",
     description:
-      "Pesquise por serviço e localize profissionais próximos a você.",
-    icon: Search,
+      "Escolha se deseja contratar um serviço ou divulgar o seu trabalho.",
+    icon: UserRoundPlus,
   },
   {
     id: 2,
-    title: "Matching Inteligente",
+    title: "Consulte os perfis",
     description:
-      "Nosso algoritmo recomenda os melhores perfis com base na localização e reputação.",
-    icon: Zap,
+      "Pesquise por categoria e localização, veja portfólios e confira avaliações.",
+    icon: Search,
   },
   {
     id: 3,
-    title: "Avaliação Bilateral",
+    title: "Entre em contato",
     description:
-      "Após a conclusão, ambos avaliam, garantindo transparência e segurança.",
+      "Converse diretamente com o profissional e, após o serviço, avalie por um convite individual.",
     icon: CheckCircle,
   },
 ];

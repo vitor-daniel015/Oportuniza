@@ -1,5 +1,5 @@
 import React from "react";
-import { MapPin, Phone, PersonStanding, LucideIcon } from "lucide-react";
+import { MapPin, Phone, LucideIcon } from "lucide-react";
 import { InputField } from "../InputField";
 import { TextAreaField } from "../TextAreaField";
 import { ContactInfoCard } from "./ContactInfoCard";
@@ -8,7 +8,8 @@ type ContactInfo = {
   id: string;
   title: string;
   description: string;
-  icon: LucideIcon;
+  icon?: LucideIcon;
+  imageSrc?: string;
 };
 
 const contactInfos: ContactInfo[] = [
@@ -16,7 +17,7 @@ const contactInfos: ContactInfo[] = [
     id: "sobre",
     title: "Sobre Nós",
     description: "Oportuniza®",
-    icon: PersonStanding,
+    imageSrc: "/assets/oportuniza.png",
   },
   {
     id: "telefone",
@@ -89,6 +90,7 @@ export function Contact() {
             <ContactInfoCard
               key={info.id}
               icon={info.icon}
+              imageSrc={info.imageSrc}
               title={info.title}
               description={info.description}
             />

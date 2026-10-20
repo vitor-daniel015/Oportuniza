@@ -7,6 +7,7 @@ import {
   type ReactNode,
 } from "react";
 import { createPortal } from "react-dom";
+import { saveNotification } from "../service/NotificationService";
 
 type ToastKind = "success" | "error" | "info";
 type Toast = { id: string; message: string; kind: ToastKind };
@@ -26,6 +27,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     (message: string, kind: ToastKind = "info") => {
       const id = crypto.randomUUID();
       setToasts((items) => [...items.slice(-2), { id, message, kind }]);
+      if (kind === "success") void saveNotification(message, kind);
       window.setTimeout(() => remove(id), 5000);
     },
     [remove],

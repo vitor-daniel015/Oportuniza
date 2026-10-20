@@ -29,6 +29,7 @@ import { ReviewsSection } from "./ReviewsSection";
 import { PortfolioLightbox, type LightboxImage } from "../PortfolioLightbox";
 import { BackButton } from "../BackButton";
 import { useToast } from "../../contexts/ToastContext";
+import { ReviewInvitationPanel } from "./ReviewInvitationPanel";
 
 const emptyForm: SaveProfileInput = {
   nome: "",
@@ -125,9 +126,16 @@ export function MeuPerfil() {
     function openSettings() {
       if (window.location.hash === "#configuracoes") setEditOpen(true);
     }
+    function forceOpenSettings() {
+      setEditOpen(true);
+    }
     openSettings();
     window.addEventListener("hashchange", openSettings);
-    return () => window.removeEventListener("hashchange", openSettings);
+    window.addEventListener("oportuniza:open-profile-settings", forceOpenSettings);
+    return () => {
+      window.removeEventListener("hashchange", openSettings);
+      window.removeEventListener("oportuniza:open-profile-settings", forceOpenSettings);
+    };
   }, []);
 
   useEffect(() => {
@@ -158,6 +166,9 @@ export function MeuPerfil() {
     setSaving(true);
     setError("");
     setMessage("");
+    const nameChanged = Boolean(
+      perfil && nextForm.nome.trim() !== perfil.nome?.trim(),
+    );
     try {
       const result = await saveMeuPerfil(nextForm);
       if (result.error) {
@@ -169,7 +180,9 @@ export function MeuPerfil() {
       if (result.data && user)
         sessionStorage.removeItem(`oportuniza:onboarding-draft:${user.id}`);
       setMessage(
-        result.data
+        nameChanged
+          ? "Nome alterado com sucesso."
+          : result.data
           ? "Perfil atualizado e publicado."
           : "Dados salvos. Complete os dados profissionais para publicar seu perfil.",
       );
@@ -397,6 +410,8 @@ export function MeuPerfil() {
             <WhatsAppIcon className="h-8 w-8" /> Enviar mensagem
           </a>
         )}
+
+        {isProvider && perfil.cadastro_completo && <ReviewInvitationPanel />}
 
         {isProvider && (
           <section className="mt-12">

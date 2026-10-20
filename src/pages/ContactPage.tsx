@@ -6,7 +6,7 @@ import { Contact } from "../components/ContactPage/Contact";
 export function ContactPage() {
   const navigate = useNavigate();
   return (
-    <div className="min-h-screen color-background">
+    <div className="min-h-screen bg-blue-depth">
       <Navbar onAuthClick={() => navigate("/entrar")} />
       <Contact />
       <Footer overlap />

@@ -43,12 +43,12 @@ export function Hero() {
             <h2 className="text-2xl font-extrabold leading-tight text-text-title">
               Encontre
               <br />
-              Oportunidades
+              profissionais
             </h2>
           </div>
           <p className="mt-5 max-w-[320px] text-sm leading-snug text-text-secondary">
-            Acesse demandas essenciais e use nosso matching inteligente para
-            recomendações com base na localização e reputação.
+            Pesquise por categoria e localização para conhecer profissionais
+            disponíveis na sua região.
           </p>
         </div>
         <div className="min-h-65 rounded-[7px] bg-white p-7 shadow-[0_12px_30px_rgba(24,70,113,.16)]">
@@ -58,14 +58,14 @@ export function Hero() {
               size={48}
             />
             <h2 className="text-2xl font-extrabold leading-tight text-text-title">
-              Cresça
+              Divulgue
               <br />
-              Profissionalmente
+              seu trabalho
             </h2>
           </div>
           <p className="mt-5 max-w-82.5 text-sm leading-snug text-text-secondary">
-            Aumente sua visibilidade, construa uma reputação verificada e
-            impulsione seu sucesso financeiro.
+            Crie seu perfil, informe os serviços que realiza e apresente fotos
+            do seu portfólio para possíveis clientes.
           </p>
         </div>
       </div>

@@ -1,15 +1,15 @@
 const trustCards = [
   {
-    title: "Painel de Avaliações",
-    description: "com perfis, estrelas e comentários verificados.",
+    title: "Avaliações por convite",
+    description: "Cada convite é individual, tem prazo e só pode ser utilizado uma vez.",
   },
   {
-    title: "Contatar via WhatsApp",
-    description: "Uma conversa limpa e segura entre Cliente e Profissional.",
+    title: "Contato direto",
+    description: "Fale com o profissional pelo WhatsApp quando ele disponibilizar o número.",
   },
   {
-    title: "Mapa de Geolocalização",
-    description: "com pinos da Oportuniza mostrando profissionais próximos.",
+    title: "Busca por região",
+    description: "Filtre os perfis por categoria, cidade, bairro e estado.",
   },
 ];
 
@@ -21,17 +21,17 @@ export function Features() {
     >
       <div className="mx-auto max-w-5xl">
         <h2 className="mb-5 text-left text-[23px] font-extrabold leading-[0.95] text-green-herbal sm:mb-8 sm:text-4xl lg:text-5xl">
-          Segurança e Confiança
+          Informações para escolher
           <br />
-          Integradas
+          com mais clareza
         </h2>
 
         <div className="grid grid-cols-2 gap-3 sm:gap-5">
           <article className="col-span-2 flex min-h-44 flex-col items-center justify-center rounded-lg bg-[#173B54] px-4 py-6 text-center sm:min-h-64 sm:rounded-xl sm:p-8 lg:col-span-1 lg:row-span-2 lg:min-h-90">
             <h3 className="text-lg font-extrabold leading-tight text-green-herbal sm:text-3xl">
-              Painel de
+              Avaliações por
               <br />
-              Avaliações
+              convite
             </h3>
             <p className="mt-3 max-w-xs text-xs leading-relaxed text-green-sprout sm:mt-5 sm:text-sm">
               {trustCards[0].description}

@@ -5,6 +5,7 @@ import {
   applyPendingGoogleRole,
   getPostLoginPath,
 } from "../service/LoginService";
+import { postLoginRedirectKey } from "../service/ReviewInvitationService";
 
 export function PostLoginPage() {
   const { user, loading } = useAuth();
@@ -12,7 +13,14 @@ export function PostLoginPage() {
   useEffect(() => {
     if (!user) return;
     applyPendingGoogleRole()
-      .then(getPostLoginPath)
+      .then(() => {
+        const redirect = sessionStorage.getItem(postLoginRedirectKey);
+        if (redirect) {
+          sessionStorage.removeItem(postLoginRedirectKey);
+          return redirect;
+        }
+        return getPostLoginPath();
+      })
       .then((path) => navigate(path, { replace: true }))
       .catch(() => navigate("/prestadores", { replace: true }));
   }, [user, navigate]);
