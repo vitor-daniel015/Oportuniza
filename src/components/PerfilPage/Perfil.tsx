@@ -84,7 +84,7 @@ export function Perfil() {
   }
 
   const especialidades = [
-    ...new Set(dados.servicos.map((servico) => servico.specialty)),
+    ...new Set(dados.servicos.map((servico) => servico.specialty_label)),
   ];
   const descricaoServicos = dados.servicos
     .map((servico) => servico.description)

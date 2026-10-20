@@ -1,6 +1,7 @@
 import { Save } from "lucide-react";
 import type { Dispatch, FormEvent, SetStateAction } from "react";
 import type { Category } from "../../service/CategoriesService";
+import { getCategoryDisplayName } from "../../service/CategoriesService";
 import type { SaveProfileInput } from "../../service/MeuPerfilService";
 import { InputField } from "../InputField";
 
@@ -32,6 +33,25 @@ export function ProfileForm({
         onChange={(e) => setForm({ ...form, nome: e.target.value })}
         required
       />
+      <label className="flex min-w-0 flex-col">
+        <span className="mb-1 ml-4 text-xs text-gray-600">
+          Como prefere ser identificado(a)?
+        </span>
+        <select
+          value={form.genero}
+          onChange={(e) =>
+            setForm({
+              ...form,
+              genero: e.target.value as SaveProfileInput["genero"],
+            })
+          }
+          className="min-w-0 rounded-full bg-[#dadada] px-5 py-3"
+        >
+          <option value="">Prefiro não informar</option>
+          <option value="homem">Homem</option>
+          <option value="mulher">Mulher</option>
+        </select>
+      </label>
       <InputField
         id="edit-whatsapp"
         type="tel"
@@ -83,7 +103,7 @@ export function ProfileForm({
             <option value="">Selecione</option>
             {categories.map((item) => (
               <option key={item.id} value={item.id}>
-                {item.nome}
+                {getCategoryDisplayName(item, form.genero)}
               </option>
             ))}
           </select>

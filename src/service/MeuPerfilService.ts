@@ -1,5 +1,6 @@
 import { supabase } from "./supabaseClient";
 import { assertTextAllowed } from "./ContentModerationService";
+import type { ProfileGender } from "./CategoriesService";
 
 export interface MeuPerfil {
   id: string;
@@ -7,6 +8,7 @@ export interface MeuPerfil {
   nome: string;
   cpf: string | null;
   cpf_cadastrado: boolean;
+  genero: ProfileGender;
   email: string | null;
   whatsapp: string | null;
   cidade: string | null;
@@ -27,7 +29,7 @@ export async function getMeuPerfil(userId: string) {
     supabase
       .from("profiles")
       .select(
-        "id, role, nome, email, whatsapp, whatsapp_publico, cpf_cadastrado, cidade, bairro, estado, avatar_url, bio, cadastro_completo, onboarding_completo",
+        "id, role, nome, email, whatsapp, whatsapp_publico, cpf_cadastrado, genero, cidade, bairro, estado, avatar_url, bio, cadastro_completo, onboarding_completo",
       )
       .eq("id", userId)
       .single(),
@@ -58,6 +60,7 @@ export interface SaveProfileInput {
   bio: string;
   categoriaId: string;
   whatsappPublico: boolean;
+  genero: ProfileGender;
   cep: string;
 }
 
@@ -65,7 +68,7 @@ export async function saveMeuPerfil(input: SaveProfileInput) {
   [input.nome, input.bio, input.cidade, input.bairro, input.estado].forEach(
     assertTextAllowed,
   );
-  return supabase.rpc("save_my_profile", {
+  const profileResult = await supabase.rpc("save_my_profile", {
     p_nome: input.nome,
     p_cpf: input.cpf,
     p_whatsapp: input.whatsapp,
@@ -77,6 +80,14 @@ export async function saveMeuPerfil(input: SaveProfileInput) {
     p_categoria_id: input.categoriaId ? Number(input.categoriaId) : null,
     p_whatsapp_publico: input.whatsappPublico,
   });
+  if (profileResult.error) return profileResult;
+
+  const genderResult = await supabase.rpc("set_my_gender", {
+    p_genero: input.genero || null,
+  });
+  if (genderResult.error)
+    return { data: null, error: genderResult.error };
+  return profileResult;
 }
 
 export async function updateMyAvatar(avatarUrl: string) {

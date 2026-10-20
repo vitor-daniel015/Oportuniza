@@ -53,6 +53,7 @@ export function Prestador() {
         [
           item.nome,
           item.specialty,
+          item.specialty_label,
           item.description,
           item.bio,
           item.bairro,
@@ -215,7 +216,7 @@ export function Prestador() {
                         {profissional.nome}
                       </h3>
                       <p className="text-sm text-text-description font-semibold mb-1">
-                        {profissional.specialty}
+                        {profissional.specialty_label}
                       </p>
                       {profissional.rating === null ? (
                         <p className="text-sm text-text-secondary">

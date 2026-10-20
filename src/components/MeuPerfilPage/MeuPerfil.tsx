@@ -2,7 +2,11 @@ import { Camera, Pencil, Plus, Trash2, UserRound } from "lucide-react";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
-import { getCategories, type Category } from "../../service/CategoriesService";
+import {
+  getCategories,
+  getCategoryDisplayName,
+  type Category,
+} from "../../service/CategoriesService";
 import { applyPendingGoogleRole } from "../../service/LoginService";
 import {
   addPortfolio,
@@ -43,6 +47,7 @@ const emptyForm: SaveProfileInput = {
   bio: "",
   categoriaId: "",
   whatsappPublico: false,
+  genero: "",
   cep: "",
 };
 
@@ -90,6 +95,7 @@ export function MeuPerfil() {
       bio: p.bio ?? "",
       categoriaId: profileData.categoriaId,
       whatsappPublico: p.whatsapp_publico,
+      genero: p.genero ?? "",
       cep: "",
     };
     const draftKey = `oportuniza:onboarding-draft:${id}`;
@@ -308,9 +314,10 @@ export function MeuPerfil() {
     );
 
   const isProvider = perfil.role === "prestador";
-  const specialty = categories.find(
-    (item) => item.id.toString() === form.categoriaId,
-  )?.nome;
+  const specialty = getCategoryDisplayName(
+    categories.find((item) => item.id.toString() === form.categoriaId),
+    form.genero,
+  );
   const address = [form.bairro, form.cidade, form.estado]
     .filter(Boolean)
     .join(", ");

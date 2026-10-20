@@ -10,7 +10,10 @@ import {
   UserRound,
 } from "lucide-react";
 import { useState, type FormEvent } from "react";
-import type { Category } from "../../service/CategoriesService";
+import {
+  getCategoryDisplayName,
+  type Category,
+} from "../../service/CategoriesService";
 import type { SaveProfileInput } from "../../service/MeuPerfilService";
 import { InputField } from "../InputField";
 import { AvatarCropInput } from "./AvatarCropInput";
@@ -231,6 +234,28 @@ export function OnboardingModal({
                     substituí-lo.
                   </p>
                 )}
+                <label className="flex min-w-0 flex-col">
+                  <span className="mb-1 ml-4 text-xs font-medium text-gray-600">
+                    Como você prefere ser identificado(a)?
+                  </span>
+                  <select
+                    value={form.genero}
+                    onChange={(event) =>
+                      setForm({
+                        ...form,
+                        genero: event.target.value as SaveProfileInput["genero"],
+                      })
+                    }
+                    className="rounded-full bg-[#dadada] px-5 py-3 outline-none focus:ring-2 focus:ring-blue-depth"
+                  >
+                    <option value="">Prefiro não informar</option>
+                    <option value="homem">Homem</option>
+                    <option value="mulher">Mulher</option>
+                  </select>
+                  <span className="mt-1 ml-4 text-xs text-text-secondary">
+                    Opcional. Usado somente para ajustar o nome da profissão.
+                  </span>
+                </label>
                 <InputField
                   id="onboarding-whatsapp"
                   type="tel"
@@ -364,7 +389,7 @@ export function OnboardingModal({
                     <option value="">Escolha uma opção</option>
                     {categories.map((category) => (
                       <option key={category.id} value={category.id}>
-                        {category.nome}
+                        {getCategoryDisplayName(category, form.genero)}
                       </option>
                     ))}
                   </select>

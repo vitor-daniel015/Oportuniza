@@ -5,6 +5,7 @@ export interface PrestadorPublico {
   prestador_id: string;
   nome: string;
   specialty: string;
+  specialty_label: string;
   rating: number | null;
   description: string;
   avatar_url: string;

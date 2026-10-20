@@ -4,15 +4,15 @@ import { Navbar } from "../components/Navbar";
 const sections = [
   [
     "1. Quem cuida dos seus dados",
-    "O Oportuniza é uma plataforma acadêmica de TCC que aproxima pessoasque procuram serviços de profissionais. Para dúvidas ou pedidos sobreseus dados, escreva para oportuniza.tcc@gmail.com.",
+    "O Oportuniza é uma plataforma acadêmica de TCC que aproxima pessoas que procuram serviços de profissionais. Para dúvidas ou pedidos sobre seus dados, escreva para oportuniza.tcc@gmail.com.",
   ],
   [
     "2. Dados que tratamos",
-    "Podemos tratar nome, e-mail, tipo de conta, CPF, WhatsApp, cidade, bairro, estado, foto, descrição profissional, portfólio, avaliações, respostas e dados técnicos de autenticação. A senha é administrada pelo serviço de autenticação do Supabase e não é acessível pelo Oportuniza.",
+    "Podemos tratar nome, e-mail, tipo de conta, CPF, WhatsApp, cidade, bairro, estado, foto, gênero opcional, descrição profissional, portfólio, avaliações, respostas e dados técnicos de autenticação. Não solicitamos data de nascimento porque ela não é necessária para as funções atuais do serviço. A senha é administrada pelo Supabase e não é acessível pelo Oportuniza.",
   ],
   [
     "3. Para que usamos",
-    "Usamos os dados para criar e proteger a conta, organizar perfis profissionais, permitir contato, portfólios e avaliações, prevenir duplicidades e abuso, prestar suporte e cumprir obrigações legais. A validação dos dígitos do CPF não equivale a uma confirmação oficial de identidade.",
+    "Usamos os dados para criar e proteger a conta, organizar perfis profissionais, permitir contato, portfólios e avaliações, prevenir duplicidades e abuso, prestar suporte e cumprir obrigações legais. Quando informado, o gênero é usado somente para adequar a forma de exibição da profissão. A validação dos dígitos do CPF não equivale a uma confirmação oficial de identidade.",
   ],
   [
     "4. CPF e segurança",
@@ -48,7 +48,7 @@ export function PrivacyPolicyPage() {
           Política de Privacidade
         </h1>
         <p className="mt-2 text-text-secondary">
-          Última atualização: 13 de outubro de 2026
+          Última atualização: 20 de outubro de 2026
         </p>
         <div className="mt-10 space-y-8">
           {sections.map(([title, text]) => (
