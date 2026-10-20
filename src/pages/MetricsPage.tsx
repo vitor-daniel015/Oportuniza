@@ -3,7 +3,6 @@ import { Navigate, useNavigate } from "react-router-dom";
 import { BarChart3, Eye, Search, Star } from "lucide-react";
 import { Navbar } from "../components/Navbar";
 import { Footer } from "../components/Footer";
-import { BackButton } from "../components/BackButton";
 import { useAuth } from "../contexts/AuthContext";
 import { getMeuPerfil } from "../service/MeuPerfilService";
 import {
@@ -44,7 +43,6 @@ export function MetricsPage() {
     <div className="min-h-screen bg-background">
       <Navbar onAuthClick={() => navigate("/entrar")} />
       <main className="mx-auto min-h-[65vh] max-w-6xl px-5 py-12 sm:px-8 md:pt-24">
-        <BackButton label="Voltar" />
         <span className="text-sm font-bold uppercase tracking-widest text-green-herbal">
           Seu desempenho
         </span>

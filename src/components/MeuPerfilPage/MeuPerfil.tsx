@@ -32,7 +32,6 @@ import { ProfileForm } from "./ProfileForm";
 import { ProfileModal } from "./ProfileModal";
 import { ReviewsSection } from "./ReviewsSection";
 import { PortfolioLightbox, type LightboxImage } from "../PortfolioLightbox";
-import { BackButton } from "../BackButton";
 import { useToast } from "../../contexts/ToastContext";
 import { ReviewInvitationPanel } from "./ReviewInvitationPanel";
 
@@ -335,7 +334,6 @@ export function MeuPerfil() {
 
   return (
     <main className="overflow-x-hidden pb-12">
-      <BackButton label="Voltar" />
       <section className="relative min-h-105 bg-linear-to-r from-blue-depth via-[#27737c] to-green-sprout text-white md:mt-14 md:min-h-0">
         <div className="mx-auto max-w-7xl px-6 md:flex md:min-h-64 md:items-center md:pl-80 lg:pl-96">
           <div className="hidden md:block">

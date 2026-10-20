@@ -3,7 +3,6 @@ import { Bell, CheckCheck } from "lucide-react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { Navbar } from "../components/Navbar";
 import { Footer } from "../components/Footer";
-import { BackButton } from "../components/BackButton";
 import { useAuth } from "../contexts/AuthContext";
 import {
   getNotifications,
@@ -39,7 +38,6 @@ export function NotificationsPage() {
     <div className="min-h-screen bg-background">
       <Navbar onAuthClick={() => navigate("/entrar")} />
       <main className="mx-auto min-h-[65vh] max-w-4xl px-5 py-12 md:pt-24">
-        <BackButton label="Voltar" />
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h1 className="text-3xl font-extrabold text-text-title">Notificações</h1>

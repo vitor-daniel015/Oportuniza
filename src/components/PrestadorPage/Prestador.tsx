@@ -7,7 +7,6 @@ import {
   PrestadorPublico,
   getPrestadoresPublicos,
 } from "../../service/PrestadoresPublicosService";
-import { BackButton } from "../BackButton";
 import { recordProfessionalSearch } from "../../service/MetricsService";
 
 export function Prestador() {
@@ -116,7 +115,6 @@ export function Prestador() {
   }
   return (
     <div className="min-h-screen">
-      <BackButton label="Voltar" />
       <MenuPrestador
         selectedCategory={selectedCategory}
         setSelectedCategory={(category) => {

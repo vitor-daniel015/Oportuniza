@@ -5,7 +5,6 @@ import { getPerfilPublico } from "../../service/PerfilPublicoService";
 import { Stars } from "../PrestadorPage/Stars";
 import { useAuth } from "../../contexts/AuthContext";
 import { PortfolioLightbox, type LightboxImage } from "../PortfolioLightbox";
-import { BackButton } from "../BackButton";
 import { recordProfileView } from "../../service/MetricsService";
 
 export function Perfil() {
@@ -130,7 +129,6 @@ export function Perfil() {
 
   return (
     <main className="pb-8">
-      <BackButton fallback="/prestadores" label="Voltar" />
       <section className="relative bg-linear-to-r from-blue-depth via-[#27737c] to-green-sprout text-white md:mt-14">
         <div className="mx-auto min-h-24 max-w-7xl px-6 sm:px-10 md:flex md:min-h-64 md:items-center md:pl-80 lg:pl-96">
           <div className="hidden md:block">
